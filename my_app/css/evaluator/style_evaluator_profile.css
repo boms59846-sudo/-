@@ -1,0 +1,46 @@
+/* css/style_evaluator_profile.css */
+/* Evaluator Profile Page Styles */
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #f8fafc;
+}
+
+.theme-orange {
+    color: #f97316;
+}
+
+.bg-theme-orange {
+    background-color: #f97316;
+}
+
+.border-theme-orange {
+    border-color: #f97316;
+}
+
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.input-focus:focus {
+    outline: none;
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.signature-pad {
+    border: 2px dashed #e2e8f0;
+    background: #fff;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.signature-pad:hover {
+    border-color: #f97316;
+    background: #fff7ed;
+}

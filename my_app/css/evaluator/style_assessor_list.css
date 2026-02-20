@@ -1,0 +1,110 @@
+﻿/* Specific page styles for Assessor List */
+
+.search-filter-wrapper {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.search-group {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+}
+
+.search-group i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.search-group input {
+    width: 100%;
+    padding: 14px 20px 14px 50px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+.search-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(255, 109, 31, 0.1);
+    background: var(--card-bg);
+}
+
+.filter-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.filter-select:hover {
+    border-color: var(--accent-color);
+}
+
+.user-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 14px;
+    background: rgba(255, 109, 31, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-color);
+    font-size: 1.3rem;
+    border: 1px solid rgba(255, 109, 31, 0.1);
+    transition: var(--transition);
+}
+
+tr:hover .user-avatar {
+    transform: scale(1.1) rotate(5deg);
+    background: var(--accent-color);
+    color: white;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.user-email {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

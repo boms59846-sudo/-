@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายชื่อผู้รับการประเมิน - CICE Assessment</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="../css/evaluator/style_evaluator.css">
+</head>
+
+<body class="bg-[#F8FAF7] text-slate-800 font-['Prompt']">
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 w-72 bg-white shadow-xl z-50 transition-transform -translate-x-full lg:translate-x-0">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-10">
+                    <img src="../icon/cice.png" class="w-10 h-10 rounded-xl shadow-lg shadow-orange-200 object-contain">
+                    <span class="text-xl font-black tracking-tight">CICE <span
+                            class="text-orange-500">SYSTEM</span></span>
+                </div>
+
+                <nav class="space-y-2">
+                    <a href="dashboardEvaluator.html"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-th-large"></i> แดชบอร์ด
+                    </a>
+                    <a href="assessor_list.html"
+                        class="sidebar-link active flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all">
+                        <i class="fas fa-clipboard-list"></i> รายชื่อที่ต้องประเมิน
+                    </a>
+                    <a href="graph_evaluation.html"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-chart-pie"></i> สรุปผลภาพรวม
+                    </a>
+                    <div class="pt-6 pb-2">
+                        <span class="px-6 text-xs font-black text-slate-400 uppercase tracking-widest">ระบบ</span>
+                    </div>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-cog"></i> ตั้งค่าโปรไฟล์
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-red-500 hover:bg-red-50 transition-all"
+                        id="logout-btn-sidebar">
+                        <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-72 flex flex-col min-w-0">
+            <!-- Top Header -->
+            <header class="glass-header sticky top-0 z-30 px-6 lg:px-10 py-4 flex items-center justify-between">
+                <button id="menu-toggle" class="lg:hidden text-slate-500 text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="hidden md:block">
+                    <h2 class="text-lg font-bold text-slate-700">รายชื่อผู้รับการประเมิน 📋</h2>
+                    <p class="text-xs text-slate-400">เลือกบุคลากรที่ต้องการดำเนินการประเมินผล</p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button
+                        class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 relative">
+                        <i class="far fa-bell"></i>
+                        <span
+                            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <img src="../icon/user.png" class="w-10 h-10 rounded-full bg-slate-100">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-6 lg:p-10 space-y-8 animate-fadeIn">
+
+                <!-- Search and Filters -->
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 relative">
+                        <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, แผนก หรือตำแหน่ง..."
+                            class="w-full bg-white border border-slate-100 rounded-2xl py-4 pl-14 pr-6 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all outline-none font-medium shadow-sm">
+                    </div>
+                    <div class="w-full md:w-56 relative">
+                        <select id="statusFilter"
+                            class="w-full bg-white border border-slate-100 rounded-2xl py-4 px-6 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all outline-none font-bold text-slate-600 appearance-none shadow-sm">
+                            <option value="all">สถานะทั้งหมด</option>
+                            <option value="pending">รอการประเมิน</option>
+                            <option value="completed">ประเมินแล้ว</option>
+                            <option value="overdue">เกินกำหนด</option>
+                        </select>
+                        <i
+                            class="fas fa-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <!-- Personnel Table Card -->
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50/50">
+                                <tr
+                                    class="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                    <th class="py-5 px-8">ชื่อ-นามสกุล / อีเมล</th>
+                                    <th class="py-5 px-6">ตำแหน่ง</th>
+                                    <th class="py-5 px-6">แผนก / สังกัด</th>
+                                    <th class="py-5 px-6">สถานะ</th>
+                                    <th class="py-5 px-6 text-right">ดำเนินการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assessor-table-body" class="text-sm">
+                                <!-- Data populated by script_assessor_list.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex justify-center items-center gap-2">
+                    <button
+                        class="w-10 h-10 rounded-xl bg-white border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-slate-50 transition-all">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button
+                        class="w-10 h-10 rounded-xl bg-orange-500 text-white font-bold flex items-center justify-center shadow-lg shadow-orange-100">1</button>
+                    <button
+                        class="w-10 h-10 rounded-xl bg-white border border-slate-100 text-slate-600 font-bold flex items-center justify-center hover:bg-slate-50 transition-all">2</button>
+                    <button
+                        class="w-10 h-10 rounded-xl bg-white border border-slate-100 text-slate-600 font-bold flex items-center justify-center hover:bg-slate-50 transition-all">3</button>
+                    <button
+                        class="w-10 h-10 rounded-xl bg-white border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-slate-50 transition-all">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- External JS -->
+    <script src="../js/evaluator/script_evaluator.js"></script>
+    <script src="../js/evaluator/script_assessor_list.js"></script>
+</body>
+
+</html>

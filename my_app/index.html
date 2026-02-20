@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CICE Assessment System - Home</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6D1F',
+                        secondary: '#1e293b',
+                        bg: '#F8FAF7',
+                        surface: '#FFFFFF',
+                    },
+                    fontFamily: { sans: ['Prompt', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/style_landing.css">
+</head>
+
+<body class="font-sans text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <img src="icon/cice.png" class="w-10 h-10 rounded-lg object-contain" alt="Logo">
+                    <span class="text-xl font-bold tracking-tight">CICE <span
+                            class="text-primary">ASSESSMENT</span></span>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#" class="text-sm font-medium hover:text-primary transition-colors">หน้าแรก</a>
+                    <a href="#features"
+                        class="text-sm font-medium hover:text-primary transition-colors">เกี่ยวกับระบบ</a>
+                    <a href="#" class="text-sm font-medium hover:text-primary transition-colors">ช่วยเหลือ</a>
+                    <a href="appraisee/login.html"
+                        class="px-5 py-2 bg-secondary text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-all shadow-md">
+                        <i class="fas fa-sign-in-alt mr-1"></i> เข้าสู่ระบบ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-video-container pt-16 pb-20 lg:pt-24 lg:pb-32">
+        <div class="video-overlay"></div>
+
+        <!-- Video Background -->
+        <video autoplay muted loop playsinline class="absolute w-full h-full object-cover -z-10">
+            <source src="backgrounds/background.mp4" type="video/mp4">
+        </video>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hero-content animate-fade-in-up">
+            <div class="text-center">
+                <h1 class="text-4xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
+                    ยกระดับการประเมิน <br><span class="text-primary italic">ศักยภาพบุคลากร</span> ของคุณ
+                </h1>
+                <p class="text-lg text-slate-500 max-w-2xl mx-auto">
+                    ระบบบริหารจัดการและประเมินผลการปฏิบัติงานภายในวิทยาลัย CICE ออกแบบมาเพื่อความแม่นยำ โปร่งใส
+                    และใช้งานง่ายสำหรับทุกคน
+                </p>
+            </div>
+        </div>
+
+        <!-- Background Decoration Decor -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-10 pointer-events-none">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
+        </div>
+    </header>
+
+    <!-- Main Features / Quick Links -->
+    <section id="features" class="py-20 bg-white relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- Card 1: สำหรับบุคลากร -->
+                <div class="group card-hover p-8 bg-slate-50 rounded-3xl border border-slate-100 transition-all">
+                    <div
+                        class="w-14 h-14 bg-white shadow-sm rounded-2xl flex items-center justify-center text-primary text-2xl mb-6 group-hover:bg-primary group-hover:text-white transition-all">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">สำหรับผู้รับการประเมิน</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                        ตรวจสอบสถานะการประเมิน ดูผลคะแนนย้อนหลัง และรับข้อเสนอแนะเพื่อพัฒนาศักยภาพตนเอง
+                    </p>
+                    <a href="appraisee/login.html"
+                        class="text-sm font-bold text-primary flex items-center gap-2 group-hover:gap-3 transition-all">
+                        เข้าใช้งานส่วนบุคลากร <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Card 2: สำหรับกรรมการ -->
+                <div class="group card-hover p-8 bg-slate-50 rounded-3xl border border-slate-100 transition-all">
+                    <div
+                        class="w-14 h-14 bg-white shadow-sm rounded-2xl flex items-center justify-center text-blue-500 text-2xl mb-6 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">สำหรับกรรมการ</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                        ทำแบบประเมินให้บุคลากรในสังกัด บันทึกความเห็น และติดตามความคืบหน้าของทีม
+                    </p>
+                    <a href="evaluator/login_evaluator.html"
+                        class="text-sm font-bold text-blue-500 flex items-center gap-2 group-hover:gap-3 transition-all">
+                        เข้าสู่ระบบกรรมการ <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Card 3: สำหรับแอดมิน -->
+                <div class="group card-hover p-8 bg-slate-50 rounded-3xl border border-slate-100 transition-all">
+                    <div
+                        class="w-14 h-14 bg-white shadow-sm rounded-2xl flex items-center justify-center text-secondary text-2xl mb-6 group-hover:bg-secondary group-hover:text-white transition-all">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">ระบบบริหารจัดการ</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                        จัดการฐานข้อมูล กระจายแบบประเมิน และสรุปรายงานสถิติภาพรวมทั้งหมดของวิทยาลัย
+                    </p>
+                    <a href="admin/login_admin.html"
+                        class="text-sm font-bold text-secondary flex items-center gap-2 group-hover:gap-3 transition-all">
+                        เข้าสู่ระบบผู้ดูแล <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Stats Brief -->
+    <section class="py-12 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+                class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 p-10 flex flex-wrap justify-around items-center gap-8 border border-white">
+                <div class="text-center">
+                    <p class="text-4xl font-black text-slate-900 mb-1">1,240</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">การประเมินที่สำเร็จ</p>
+                </div>
+                <div class="w-px h-12 bg-slate-100 hidden md:block"></div>
+                <div class="text-center">
+                    <p class="text-4xl font-black text-primary mb-1">98%</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">ความพึงพอใจระบบ</p>
+                </div>
+                <div class="w-px h-12 bg-slate-100 hidden md:block"></div>
+                <div class="text-center">
+                    <p class="text-4xl font-black text-slate-900 mb-1">24/7</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">การเข้าถึงข้อมูล</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white pt-20 pb-10 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-3">
+                    <img src="icon/cice.png" class="w-10 h-10 rounded-xl object-contain shadow-lg" alt="Logo">
+                    <span class="font-bold text-lg">CICE <span class="text-primary">ASSESSMENT</span></span>
+                </div>
+                <div class="flex gap-8 text-sm text-slate-500 font-medium">
+                    <a href="#" class="hover:text-primary">นโยบายความเป็นส่วนตัว</a>
+                    <a href="#" class="hover:text-primary">เงื่อนไขการใช้งาน</a>
+                    <a href="#" class="hover:text-primary">ติดต่อทีมพัฒนา</a>
+                </div>
+                <p class="text-sm text-slate-400">
+                    &copy; 2025 CICE College. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- External JS -->
+    <script src="js/script_landing.js"></script>
+</body>
+
+</html>

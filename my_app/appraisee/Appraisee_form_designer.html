@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เครื่องมือออกแบบการประเมิน - ระบบประเมินบุคลากร CICE</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="../css/appraisee/style_Appraisee.css">
+    <!-- Specific CSS for Form Designer -->
+    <link rel="stylesheet" href="../css/appraisee/style_Appraisee_form_designer.css">
+</head>
+
+<body class="p-4 md:p-6 lg:p-8">
+
+    <!-- ==================== MAIN LAYOUT ==================== -->
+    <div class="dashboard-wrapper">
+
+        <!-- ==================== SIDEBAR ==================== -->
+        <aside class="dashboard-sidebar space-y-5">
+
+            <!-- Profile Card -->
+            <div class="glass-card p-6 flex flex-col items-center text-center animate-in">
+                <div class="relative group mb-3">
+                    <img id="profile-img"
+                        src="https://ui-avatars.com/api/?name=สมชาย+ใจดี&background=FF6D1F&color=fff&size=128"
+                        alt="Avatar" class="profile-avatar">
+                    <button
+                        class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md hover:text-orange-500 transition">
+                        <i class="fas fa-camera text-xs"></i>
+                    </button>
+                </div>
+                <h2 class="text-lg font-bold leading-tight">นายสมชาย ใจดี</h2>
+                <p class="text-gray-500 text-xs mb-4">ครู คศ.1 (วิทยฐานะชำนาญการ)</p>
+
+                <div class="flex gap-2 w-full">
+                    <a href="Appraisee_data.html"
+                        class="flex-1 py-2 text-center text-xs font-semibold bg-gray-100 rounded-xl hover:bg-gray-200 transition">
+                        ดูโปรไฟล์
+                    </a>
+                    <a href="Appraisee_edit.html"
+                        class="flex-1 py-2 text-center text-xs font-semibold bg-orange-50 text-orange-600 rounded-xl hover:bg-orange-100 transition">
+                        แก้ไขข้อมูล
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="glass-card p-3 space-y-1 font-medium animate-in" style="animation-delay: 0.1s">
+                <a href="dashboardAppraisee.html" class="sidebar-item flex items-center gap-3 p-3 text-sm">
+                    <i class="fas fa-th-large w-5 text-center"></i> แดชบอร์ด
+                </a>
+                <a href="Appraisee_syllabus.html" class="sidebar-item flex items-center gap-3 p-3 text-sm">
+                    <i class="fas fa-book-open w-5 text-center"></i> จัดทำโครงสร้างหลักสูตร
+                </a>
+                <a href="#" class="sidebar-item active flex items-center gap-3 p-3 text-sm">
+                    <i class="fas fa-tools w-5 text-center"></i> เครื่องมือออกแบบการประเมิน
+                </a>
+                <a href="Appraisee_result.html" class="sidebar-item flex items-center gap-3 p-3 text-sm">
+                    <i class="fas fa-chart-line w-5 text-center"></i> ผลการประเมิน
+                </a>
+                <hr class="border-gray-200 my-1">
+                <button onclick="handleLogout()"
+                    class="w-full sidebar-item flex items-center gap-3 p-3 text-sm text-red-500 hover:bg-red-50">
+                    <i class="fas fa-sign-out-alt w-5 text-center"></i> ออกจากระบบ
+                </button>
+            </nav>
+
+            <!-- Progress Widget -->
+            <div class="glass-card p-5 animate-in" style="animation-delay: 0.2s">
+                <h4 class="font-bold mb-3 flex items-center justify-between text-sm">
+                    ความคืบหน้าการส่งงาน
+                    <span class="text-orange-600 font-black">75%</span>
+                </h4>
+                <div class="progress-bar mb-2">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <p class="text-[10px] text-gray-400">เหลืออีก 2 เอกสารที่ต้องอัปโหลดเพื่อความสมบูรณ์</p>
+            </div>
+        </aside>
+
+        <!-- ==================== MAIN CONTENT ==================== -->
+        <main class="space-y-6 min-w-0">
+
+            <!-- Header -->
+            <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-tools text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">เครื่องมือออกแบบการประเมิน</h2>
+                        <p class="text-[11px] text-slate-500 font-medium">กำหนดหัวข้อและเกณฑ์คะแนน (Custom Assessment
+                            Forms)</p>
+                    </div>
+                </div>
+                <button onclick="saveAll()"
+                    class="btn-orange px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-orange-200 flex items-center gap-2">
+                    <i class="fas fa-save"></i> บันทึกโครงสร้าง
+                </button>
+            </header>
+
+            <!-- Section 1: ข้อมูลหลัก -->
+            <div class="card-main p-8 fade-in">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="stepper-icon">1</div>
+                    <h3 class="text-lg font-bold text-slate-800">ข้อมูลหลัก</h3>
+                </div>
+
+                <div class="grid gap-6">
+                    <div>
+                        <label
+                            class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">ชื่อชุดการประเมิน</label>
+                        <input type="text" placeholder="เช่น การประเมินสมรรถนะหลัก (Core Competency)"
+                            class="input-custom w-full px-5 py-3.5 text-slate-700 font-medium">
+                    </div>
+                    <div>
+                        <label
+                            class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">คำอธิบายเพิ่มเติม</label>
+                        <textarea rows="3" placeholder="ระบุรายละเอียดเกณฑ์การตัดสิน หรือคำชี้แจงสำหรับผู้ประเมิน..."
+                            class="input-custom w-full px-5 py-3.5 text-slate-700 resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: รายการประเมิน -->
+            <div class="flex items-center justify-between fade-in" style="animation-delay: 0.1s;">
+                <div class="flex items-center gap-3">
+                    <div class="stepper-icon">2</div>
+                    <h3 class="text-lg font-bold text-slate-800">รายการประเมินและตัวเลือก</h3>
+                </div>
+                <button onclick="addQuestion()"
+                    class="btn-outline-orange px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all">
+                    <i class="fas fa-plus-circle"></i> เพิ่มหัวข้อใหม่
+                </button>
+            </div>
+
+            <!-- Container for questions -->
+            <div id="questionsList" class="space-y-6 fade-in" style="animation-delay: 0.2s;">
+                <!-- Question Cards will be injected here -->
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Template สำหรับข้อคำถาม -->
+    <template id="questionCardTemplate">
+        <div class="card-main p-8 border-l-4 border-l-orange-500 relative group fade-in">
+            <button onclick="this.closest('.card-main').remove()"
+                class="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition-colors">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+
+            <div class="space-y-4 mb-8">
+                <input type="text" placeholder="พิมพ์คำถามที่ต้องการประเมิน..."
+                    class="w-full text-xl font-bold text-slate-800 placeholder:text-slate-300 focus:outline-none bg-transparent">
+                <input type="text" placeholder="คำชี้แจงสำหรับหัวข้อนี้ (ถ้ามี)"
+                    class="w-full text-sm text-slate-400 focus:outline-none bg-transparent border-b border-transparent focus:border-slate-100 pb-1">
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                <div class="flex items-center justify-between mb-6">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase flex items-center gap-2">
+                        <i class="fas fa-list-ul text-orange-500"></i> การจัดการตัวเลือกคะแนน
+                    </h4>
+                    <div class="flex gap-2">
+                        <button onclick="applyPreset(this, '5level')"
+                            class="text-[10px] font-bold px-3 py-1.5 bg-white border border-slate-200 rounded-lg hover:border-orange-500 hover:text-orange-500 transition-all">แบบ
+                            5 ระดับ</button>
+                        <button onclick="applyPreset(this, 'yesno')"
+                            class="text-[10px] font-bold px-3 py-1.5 bg-white border border-slate-200 rounded-lg hover:border-orange-500 hover:text-orange-500 transition-all">ใช่/ไม่ใช่</button>
+                    </div>
+                </div>
+
+                <div class="choice-container space-y-3 mb-4">
+                    <!-- Choice rows -->
+                </div>
+
+                <button onclick="addChoiceRow(this)"
+                    class="w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-[11px] font-bold text-slate-400 hover:border-orange-300 hover:text-orange-500 hover:bg-orange-50 transition-all uppercase tracking-widest">
+                    <i class="fas fa-plus mr-1"></i> เพิ่มตัวเลือกคะแนน
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Custom Scripts -->
+    <script src="../js/auth-guard.js"></script>
+    <script src="../js/appraisee/script_Appraisee.js"></script>
+    <script src="../js/appraisee/script_Appraisee_form_designer.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+﻿/* d:\watcharaphon18\my_app\css\estimate.css */
+
+:root {
+    --progress-bg: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] {
+    --progress-bg: rgba(15, 23, 42, 0.8);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.5s ease backwards;
+}
+
+/* Sticky Progress Bar */
+.evaluation-progress-bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--progress-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin: -1.5rem -1.5rem 2rem -1.5rem;
+}
+
+[data-theme="dark"] .evaluation-progress-bar {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.progress-track {
+    height: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .progress-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #FF6D1F, #FF8A50);
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 15px rgba(255, 109, 31, 0.3);
+}
+
+/* Question Cards */
+.question-card {
+    background: white;
+    border-radius: 2rem;
+    padding: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .question-card {
+    background: #1e293b;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.question-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-color: #FF6D1F;
+}
+
+.rating-item input[type="radio"] {
+    display: none;
+}
+
+.rating-item label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+    background: #f8fafc;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #64748b;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+[data-theme="dark"] .rating-item label {
+    background: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+}
+
+.rating-item input[type="radio"]:checked+label {
+    background: #FF6D1F;
+    color: white;
+    box-shadow: 0 8px 16px rgba(255, 109, 31, 0.2);
+    transform: scale(1.1);
+}
+
+.rating-item label:hover:not(input[type="radio"]:checked + label) {
+    background: #fff7ed;
+    color: #FF6D1F;
+    border-color: #FF6D1F;
+}
+
+[data-theme="dark"] .rating-item label:hover:not(input[type="radio"]:checked + label) {
+    background: rgba(255, 109, 31, 0.1);
+}
+
+/* Comment Area */
+.comment-area {
+    width: 100%;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    background: #f8fafc;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    outline: none;
+    font-size: 1rem;
+    color: #334155;
+}
+
+[data-theme="dark"] .comment-area {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+}
+
+.comment-area:focus {
+    background: white;
+    border-color: #FF6D1F;
+    box-shadow: 0 10px 20px rgba(255, 109, 31, 0.05);
+}
+
+[data-theme="dark"] .comment-area:focus {
+    background: #0f172a;
+}

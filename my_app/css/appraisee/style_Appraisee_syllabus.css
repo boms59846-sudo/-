@@ -1,0 +1,148 @@
+/* css/style_Appraisee_syllabus.css */
+/* Styles for Academic Syllabus Builder */
+
+:root {
+    --primary-orange: #F97316;
+    --bg-slate: #F1F5F9;
+    --text-slate: #334155;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.5s ease-out forwards;
+}
+
+.animate-zoom-in {
+    animation: zoomIn 0.7s ease-out forwards;
+}
+
+/* Components */
+.step-dot {
+    transition: all 0.5s ease;
+}
+
+.step-active .step-dot {
+    background-color: var(--primary-orange);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.2);
+}
+
+.step-inactive .step-dot {
+    background-color: #f8fafc;
+    color: #cbd5e1;
+    border: 1px solid #e2e8f0;
+}
+
+.step-completed .step-dot {
+    background-color: var(--primary-orange);
+    color: white;
+}
+
+.input-wrapper {
+    transition: all 0.3s ease;
+}
+
+.input-modern {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background-color: #F1F5F9;
+    border: 2px solid transparent;
+    border-radius: 1.5rem;
+    font-weight: bold;
+    color: #334155;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.input-modern:focus {
+    background-color: white;
+    border-color: var(--primary-orange);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card-neumorphic {
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+}
+
+.btn-primary {
+    background-color: var(--primary-orange);
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #ea580c;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3);
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #94a3b8;
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    color: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+/* Specific elements */
+.ai-card {
+    background: var(--primary-orange);
+    border-radius: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(249, 115, 22, 0.2);
+}
+
+.glass-header-inner {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 3rem;
+}

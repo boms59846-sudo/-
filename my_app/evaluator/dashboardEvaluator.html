@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แดชบอร์ดกรรมการ - CICE Assessment</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="../css/evaluator/style_evaluator.css">
+</head>
+
+<body class="bg-[#F8FAF7] text-slate-800">
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 w-72 bg-white shadow-xl z-50 transition-transform -translate-x-full lg:translate-x-0">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-10">
+                    <img src="../icon/cice.png" class="w-10 h-10 rounded-xl shadow-lg shadow-orange-200 object-contain">
+                    <span class="text-xl font-black tracking-tight">CICE <span
+                            class="text-orange-500">SYSTEM</span></span>
+                </div>
+
+                <nav class="space-y-2">
+                    <a href="dashboardEvaluator.html"
+                        class="sidebar-link active flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all">
+                        <i class="fas fa-th-large"></i> แดชบอร์ด
+                    </a>
+                    <a href="assessor_list.html"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-clipboard-list"></i> รายชื่อที่ต้องประเมิน
+                    </a>
+                    <a href="graph_evaluation.html"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-chart-pie"></i> สรุปผลภาพรวม
+                    </a>
+                    <div class="pt-6 pb-2">
+                        <span class="px-6 text-xs font-black text-slate-400 uppercase tracking-widest">ระบบ</span>
+                    </div>
+                    <a href="Evaluator_profile.html"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-cog"></i> ตั้งค่าโปรไฟล์
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-red-500 hover:bg-red-50 transition-all"
+                        id="logout-btn-sidebar">
+                        <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-72 flex flex-col min-w-0">
+            <!-- Top Header -->
+            <header class="glass-header sticky top-0 z-30 px-6 lg:px-10 py-4 flex items-center justify-between">
+                <button id="menu-toggle" class="lg:hidden text-slate-500 text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="hidden md:block">
+                    <h2 class="text-lg font-bold">สวัสดี, <span class="text-orange-500">กรรมการบริหาร</span> 👋</h2>
+                    <p class="text-xs text-slate-400">วันจันทร์ที่ 9 กุมภาพันธ์ 2569</p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button
+                            class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 relative">
+                            <i class="far fa-bell"></i>
+                            <span
+                                class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-bold leading-none">ดร. สมชาย ใจดี</p>
+                            <span
+                                class="text-[10px] text-slate-400 uppercase font-black tracking-tighter">กรรมการบริหารวิทยาลัย</span>
+                        </div>
+                        <img src="https://ui-avatars.com/api/?name=Somchai+Jaidee&background=f1f5f9&color=64748b"
+                            class="w-10 h-10 rounded-full">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-6 lg:p-10 space-y-8 animate-fadeIn">
+
+                <!-- Hero Section / Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div
+                        class="stat-card bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-5">
+                        <div
+                            class="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm font-medium">รอการประเมิน</p>
+                            <h3 class="text-3xl font-black">12 <span
+                                    class="text-sm font-normal text-slate-400">ท่าน</span></h3>
+                        </div>
+                    </div>
+                    <div
+                        class="stat-card bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-5">
+                        <div
+                            class="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center text-2xl">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm font-medium">ประเมินแล้ว</p>
+                            <h3 class="text-3xl font-black">45 <span
+                                    class="text-sm font-normal text-slate-400">ท่าน</span></h3>
+                        </div>
+                    </div>
+                    <div
+                        class="stat-card bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-5">
+                        <div
+                            class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-sm font-medium">บุคลากรทั้งหมด</p>
+                            <h3 class="text-3xl font-black">57 <span
+                                    class="text-sm font-normal text-slate-400">ท่าน</span></h3>
+                        </div>
+                    </div>
+                    <div
+                        class="stat-card bg-red-500 p-6 rounded-[2rem] shadow-lg shadow-red-200 flex items-center gap-5 text-white">
+                        <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-2xl">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <p class="text-red-100 text-sm font-medium">ใกล้ครบกำหนด</p>
+                            <h3 class="text-3xl font-black">3 <span class="text-sm font-normal text-red-100">วัน</span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                    <!-- Chart & Summary -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="text-xl font-black">สถานะการประเมินรายแผนก</h3>
+                                    <p class="text-sm text-slate-400">สัดส่วนความคืบหน้าแบ่งตามสังกัด</p>
+                                </div>
+                                <select
+                                    class="bg-slate-50 border-none rounded-xl px-4 py-2 text-sm font-bold outline-none ring-1 ring-slate-200">
+                                    <option>ไตรมาสที่ 1/2569</option>
+                                    <option>ไตรมาสที่ 4/2568</option>
+                                </select>
+                            </div>
+                            <div class="h-[300px] relative">
+                                <canvas id="departmentChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Recent Pending Tasks Table -->
+                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-xl font-black">งานค้างที่ต้องเร่งดำเนินการ</h3>
+                                <a href="assessor_list.html"
+                                    class="text-orange-500 font-bold text-sm hover:underline">ดูทั้งหมด</a>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr
+                                            class="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                            <th class="pb-4">ชื่อ-นามสกุล</th>
+                                            <th class="pb-4">ตำแหน่ง</th>
+                                            <th class="pb-4">สถานะ</th>
+                                            <th class="pb-4 text-right">ดำเนินการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-sm">
+                                        <tr class="border-b border-slate-50 group">
+                                            <td class="py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <img src="https://i.pravatar.cc/150?u=1" class="w-8 h-8 rounded-lg">
+                                                    <span class="font-bold">นายสมชาย เข็มกลัด</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 text-slate-500">ครู คศ. 1 (ช่างยนต์)</td>
+                                            <td class="py-4">
+                                                <span
+                                                    class="px-3 py-1 bg-red-50 text-red-500 rounded-full text-[10px] font-black uppercase">รอดำเนินการ</span>
+                                            </td>
+                                            <td class="py-4 text-right">
+                                                <a href="estimate.html"
+                                                    class="px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-xs shadow-md shadow-orange-100 hover:bg-orange-600 transition-all">ประเมินเลย</a>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-slate-50">
+                                            <td class="py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <img src="https://i.pravatar.cc/150?u=2" class="w-8 h-8 rounded-lg">
+                                                    <span class="font-bold">นางสาวฟ้าใส ใจงาม</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 text-slate-500">หัวหน้าแผนกบัญชี</td>
+                                            <td class="py-4">
+                                                <span
+                                                    class="px-3 py-1 bg-red-50 text-red-500 rounded-full text-[10px] font-black uppercase">รอดำเนินการ</span>
+                                            </td>
+                                            <td class="py-4 text-right">
+                                                <a href="estimate.html"
+                                                    class="px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-xs shadow-md shadow-orange-100 hover:bg-orange-600 transition-all">ประเมินเลย</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side Panels -->
+                    <div class="space-y-8">
+                        <!-- Quick Navigation Card -->
+                        <div class="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl shadow-slate-200">
+                            <h3 class="text-lg font-black mb-4">เมนูเข้าใช้งานด่วน</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="window.location.href='assessor_list.html'"
+                                    class="flex flex-col items-center gap-3 p-4 bg-white/10 rounded-2xl hover:bg-orange-500 transition-all border border-white/5 group">
+                                    <i
+                                        class="fas fa-file-signature text-xl group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-[11px] font-bold">เริ่มประเมิน</span>
+                                </button>
+                                <button onclick="window.location.href='graph_evaluation.html'"
+                                    class="flex flex-col items-center gap-3 p-4 bg-white/10 rounded-2xl hover:bg-blue-500 transition-all border border-white/5 group">
+                                    <i class="fas fa-chart-line text-xl group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-[11px] font-bold">ดูสรุปผล</span>
+                                </button>
+                                <button
+                                    class="flex flex-col items-center gap-3 p-4 bg-white/10 rounded-2xl hover:bg-purple-500 transition-all border border-white/5 group">
+                                    <i class="fas fa-print text-xl group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-[11px] font-bold">พิมพ์รายงาน</span>
+                                </button>
+                                <button
+                                    class="flex flex-col items-center gap-3 p-4 bg-white/10 rounded-2xl hover:bg-emerald-500 transition-all border border-white/5 group">
+                                    <i class="fas fa-headset text-xl group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-[11px] font-bold">แจ้งปัญหา</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Circle -->
+                        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 text-center">
+                            <h3 class="text-lg font-black mb-6">ความคืบหน้ารวมของคุณ</h3>
+                            <div class="relative w-40 h-40 mx-auto mb-6">
+                                <canvas id="progressCircle"></canvas>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-3xl font-black">78%</span>
+                                    <span
+                                        class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">สำเร็จ</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-500 leading-relaxed px-4">เหลือบุคลากรอีก 12
+                                ท่านที่ยังไม่ได้ประเมิน กรุณาดำเนินการให้ครบก่อนวันที่ <span
+                                    class="text-red-500 font-bold">12 ก.พ. นี้</span></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- External JS -->
+    <script src="../js/auth-guard.js"></script>
+    <script src="../js/evaluator/script_evaluator.js"></script>
+</body>
+
+</html>

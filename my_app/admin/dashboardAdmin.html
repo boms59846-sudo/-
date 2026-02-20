@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CICE Admin</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/admin/style_admin.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--primary-color)',
+                        'primary-light': 'var(--primary-light)',
+                        bg: 'var(--bg-color)',
+                        surface: 'var(--surface-color)',
+                        text: 'var(--text-color)',
+                        'text-muted': 'var(--text-muted)',
+                        border: 'var(--border-color)'
+                    },
+                    fontFamily: { sans: ['Prompt', 'sans-serif'] },
+                    borderRadius: { 'xl2': '24px' },
+                    boxShadow: { 'soft': '0 10px 40px -10px rgba(0,0,0,0.05)' }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-bg text-text min-h-screen flex selection:bg-primary selection:text-white">
+
+    <!-- Modals (Preserved from Original) -->
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-cog"></i> แก้ไขข้อมูลส่วนตัว</h3>
+                <button id="close-profile-modal" class="close-btn">&times;</button>
+            </div>
+            <form id="profile-form">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="fname">ชื่อจริง</label>
+                        <input type="text" id="fname" name="fname" placeholder="ระบุชื่อจริง..." class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="lname">นามสกุล</label>
+                        <input type="text" id="lname" name="lname" placeholder="ระบุนามสกุล..." class="form-control">
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <label for="department">แผนก/ฝ่าย</label>
+                    <select id="department" name="department" class="form-control">
+                        <option value="academic">ฝ่ายวิชาการ</option>
+                        <option value="admin">ฝ่ายธุรการ</option>
+                        <option value="personnel">ฝ่ายบุคคล</option>
+                    </select>
+                </div>
+                <div class="mt-8 flex justify-end">
+                    <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: เพิ่มรอบการประเมิน -->
+    <div id="add-period-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> เพิ่มรอบการประเมิน</h3>
+                <button class="close-btn close-modal-btn">&times;</button>
+            </div>
+            <form id="add-period-form">
+                <div class="form-group">
+                    <label>ชื่อรอบการประเมิน <span class="text-red-500">*</span></label>
+                    <input type="text" required placeholder="เช่น รอบที่ 1/2568 (Q1)" class="form-control">
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="form-group">
+                        <label>วันเริ่มต้น <span class="text-red-500">*</span></label>
+                        <input type="date" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>วันสิ้นสุด <span class="text-red-500">*</span></label>
+                        <input type="date" required class="form-control">
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <label>สถานะ</label>
+                    <select class="form-control">
+                        <option value="draft">ร่าง</option>
+                        <option value="active">กำลังดำเนินการ</option>
+                        <option value="completed">เสร็จสิ้น</option>
+                    </select>
+                </div>
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" class="btn btn-secondary close-modal-btn">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: เพิ่มแผนก -->
+    <div id="add-dept-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-building"></i> เพิ่มแผนกใหม่</h3>
+                <button class="close-btn close-modal-btn">&times;</button>
+            </div>
+            <form id="add-dept-form">
+                <div class="form-group">
+                    <label>รหัสแผนก <span class="text-red-500">*</span></label>
+                    <input type="text" required placeholder="เช่น DEPT003" class="form-control">
+                </div>
+                <div class="form-group mt-4">
+                    <label>ชื่อแผนก <span class="text-red-500">*</span></label>
+                    <input type="text" required placeholder="เช่น ฝ่ายการเงิน" class="form-control">
+                </div>
+                <div class="form-group mt-4">
+                    <label>หัวหน้าแผนก</label>
+                    <select class="form-control">
+                        <option value="">-- เลือกหัวหน้าแผนก --</option>
+                        <option value="1">ผศ.ดร.สมชาย ใจดี</option>
+                        <option value="2">นางสาวสมหญิง รักเรียน</option>
+                    </select>
+                </div>
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" class="btn btn-secondary close-modal-btn">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: เพิ่มสายการประเมิน -->
+    <div id="add-line-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-project-diagram"></i> เพิ่มสายการประเมิน</h3>
+                <button class="close-btn close-modal-btn">&times;</button>
+            </div>
+            <form id="add-line-form">
+                <div class="form-group">
+                    <label>ชื่อสายการประเมิน <span class="text-red-500">*</span></label>
+                    <input type="text" required placeholder="เช่น สายวิชาการ - ระดับผู้ช่วย" class="form-control">
+                </div>
+                <div class="form-group mt-4">
+                    <label>ประเภทการประเมิน <span class="text-red-500">*</span></label>
+                    <select class="form-control">
+                        <option value="hierarchical">บังคับบัญชา</option>
+                        <option value="360">360 องศา</option>
+                        <option value="custom">กำหนดเอง</option>
+                    </select>
+                </div>
+                <div class="form-group mt-4">
+                    <label>คำอธิบาย</label>
+                    <textarea class="form-control" rows="3" placeholder="อธิบายรายละเอียดเพิ่มเติม..."></textarea>
+                </div>
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" class="btn btn-secondary close-modal-btn">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside
+        class="fixed inset-y-0 left-0 w-72 bg-surface border-r border-border z-50 transform -translate-x-full lg:translate-x-0 glass-panel overflow-y-auto"
+        id="sidebar">
+        <div class="p-8 flex items-center gap-3">
+            <img src="../icon/cice.png" class="w-10 h-10 object-contain" alt="Logo">
+            <span class="text-xl font-bold tracking-tight text-text">CICE <span
+                    class="text-primary">dashboard</span></span>
+        </div>
+
+        <nav class="px-6 space-y-1 mb-24">
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mb-3 px-4 opacity-60">เมนูหลัก
+            </div>
+            <a href="#" id="nav-dashboard"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-primary bg-primary-light rounded-2xl font-medium active">
+                <i class="fas fa-th-large w-5 text-center"></i>
+                <span>แดชบอร์ดรวม</span>
+            </a>
+            <a href="#" id="nav-personnel"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-user-friends w-5 text-center"></i>
+                <span>จัดการบุคลากร</span>
+            </a>
+            <a href="#" id="nav-organization"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-sitemap w-5 text-center"></i>
+                <span>ผังองค์กร</span>
+            </a>
+
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mt-8 mb-3 px-4 opacity-60">
+                ระบบการประเมิน</div>
+            <a href="#" id="nav-committee"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-user-plus w-5 text-center"></i>
+                <span>เพิ่มบุคลากรรายบุคคล</span>
+            </a>
+            <a href="#" id="nav-assessment-period"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-calendar-alt w-5 text-center"></i>
+                <span>รอบการประเมิน</span>
+            </a>
+            <a href="#" id="nav-assessment-line"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-project-diagram w-5 text-center"></i>
+                <span>สายการประเมิน</span>
+            </a>
+
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mt-8 mb-3 px-4 opacity-60">
+                ศูนย์บัญชาการ</div>
+            <a href="#" id="nav-command-center"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-shield-alt w-5 text-center"></i>
+                <span>Command Center</span>
+            </a>
+
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mt-8 mb-3 px-4 opacity-60">
+                รายงานและสถิติ</div>
+            <a href="#" id="nav-report-summary"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-poll w-5 text-center"></i>
+                <span>สรุปผลการประเมิน</span>
+            </a>
+            <a href="#" id="nav-report-statistics"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-chart-bar w-5 text-center"></i>
+                <span>ตารางผลคะแนน</span>
+            </a>
+        </nav>
+
+        <!-- Current User Info (Sidebar Bottom) -->
+        <div class="absolute bottom-8 left-6 right-6 space-y-2">
+            <div id="nav-profile-shortcut"
+                class="p-4 bg-bg rounded-2xl flex items-center gap-3 hover:bg-primary/5 cursor-pointer transition-all border border-transparent hover:border-primary/10 group">
+                <img src="../icon/user.png"
+                    class="w-10 h-10 rounded-full border-2 border-surface shadow-sm group-hover:scale-105 transition-transform">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-text truncate username">Administrator</p>
+                    <p class="text-[10px] text-text-muted uppercase font-bold tracking-tighter">ตั้งค่าโปรไฟล์</p>
+                </div>
+                <button class="text-text-muted hover:text-primary transition-colors">
+                    <i class="fas fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+            <button id="logout-btn-sidebar"
+                class="w-full flex items-center justify-center gap-2 p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all font-bold text-xs">
+                <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content wrapper -->
+    <main class="lg:ml-72 flex-1 p-6 lg:p-10 transition-all duration-300">
+
+        <!-- Header area -->
+        <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
+            <div class="flex items-center gap-4">
+                <button id="menu-toggle" class="lg:hidden text-text-muted text-xl p-2 hover:bg-bg rounded-lg">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-text">ระบบบริหารจัดการ CICE</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="dark-mode-toggle-btn"
+                    class="w-10 h-10 bg-surface border border-border rounded-xl flex items-center justify-center text-text-muted hover:text-primary transition-all shadow-sm">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="logout-btn"
+                    class="w-10 h-10 bg-surface border border-border rounded-xl flex items-center justify-center text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all shadow-sm"
+                    title="ออกจากระบบ">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+                <div
+                    class="bg-surface border border-border rounded-full px-4 py-2 flex items-center gap-2 text-xs font-bold text-green-600 shadow-sm">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    ระบบปกติ
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Sections -->
+
+        <!-- 1. Dashboard View -->
+        <section id="view-dashboard" class="section-content active">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <!-- Left & Center: Assessment Form -->
+                <div class="xl:col-span-2 space-y-8">
+                    <div class="bg-surface rounded-xl2 shadow-soft border border-border overflow-hidden">
+                        <div class="bg-primary/5 p-6 border-b border-border flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-orange-100">
+                                    <i class="fas fa-file-signature"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-bold">สร้างและส่งชุดประเมิน</h2>
+                                    <p class="text-[10px] text-text-muted uppercase font-bold tracking-widest">
+                                        Assessment Dispatcher</p>
+                                </div>
+                            </div>
+                            <div class="text-right hidden sm:block">
+                                <p class="text-[10px] font-bold text-text-muted uppercase">วันที่ปัจจุบัน</p>
+                                <p id="current-date" class="text-sm font-bold text-primary">-- / -- / ----</p>
+                            </div>
+                        </div>
+
+                        <form id="dispatchForm" class="p-8 space-y-8">
+                            <!-- Basic Info -->
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-2 text-primary font-bold text-sm mb-2">
+                                    <i class="fas fa-info-circle"></i> ข้อมูลเบื้องต้น
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-text-muted uppercase mb-2">ชื่อแคมเปญการประเมิน</label>
+                                        <input type="text" id="campaignName"
+                                            placeholder="เช่น ประเมินครูและบุคลากร ประจำปี 2568"
+                                            class="w-full bg-bg border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                            required>
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-text-muted uppercase mb-2">เลือกชุดแบบประเมิน
+                                            (Template)</label>
+                                        <select
+                                            class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none cursor-pointer focus:ring-2 focus:ring-primary/20">
+                                            <option value="1">แบบประเมินพนักงานทั่วไป (8 ข้อหลัก)</option>
+                                            <option value="2">แบบประเมินสมรรถนะหัวหน้างาน</option>
+                                            <option value="3">แบบสำรวจความพึงพอใจในองค์กร</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Targeting -->
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-2 text-primary font-bold text-sm mb-2">
+                                    <i class="fas fa-users"></i> กำหนดกลุ่มเป้าหมายผู้ถูกประเมิน
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                    <div class="role-chip">
+                                        <input type="checkbox" id="target-emp" class="hidden" checked>
+                                        <label for="target-emp"
+                                            class="flex flex-col items-center justify-center p-4 border border-border rounded-2xl cursor-pointer hover:bg-bg transition-all text-center h-full">
+                                            <i class="fas fa-user-graduate text-xl mb-2 text-text-muted"></i>
+                                            <span
+                                                class="text-[10px] font-bold uppercase leading-tight">พนักงานทั่วไป<br>(Staff)</span>
+                                        </label>
+                                    </div>
+                                    <div class="role-chip">
+                                        <input type="checkbox" id="target-mgr" class="hidden">
+                                        <label for="target-mgr"
+                                            class="flex flex-col items-center justify-center p-4 border border-border rounded-2xl cursor-pointer hover:bg-bg transition-all text-center h-full">
+                                            <i class="fas fa-user-tie text-xl mb-2 text-text-muted"></i>
+                                            <span
+                                                class="text-[10px] font-bold uppercase leading-tight">หัวหน้างาน<br>(Manager)</span>
+                                        </label>
+                                    </div>
+                                    <div class="role-chip">
+                                        <input type="checkbox" id="target-exec" class="hidden">
+                                        <label for="target-exec"
+                                            class="flex flex-col items-center justify-center p-4 border border-border rounded-2xl cursor-pointer hover:bg-bg transition-all text-center h-full">
+                                            <i class="fas fa-crown text-xl mb-2 text-text-muted"></i>
+                                            <span
+                                                class="text-[10px] font-bold uppercase leading-tight">ผู้บริหาร<br>(Executive)</span>
+                                        </label>
+                                    </div>
+                                    <div class="role-chip">
+                                        <input type="checkbox" id="target-other" class="hidden">
+                                        <label for="target-other"
+                                            class="flex flex-col items-center justify-center p-4 border border-border rounded-2xl cursor-pointer hover:bg-bg transition-all text-center h-full">
+                                            <i class="fas fa-plus-circle text-xl mb-2 text-text-muted"></i>
+                                            <span
+                                                class="text-[10px] font-bold uppercase leading-tight">อื่นๆ<br>(Custom)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-6 border-t border-border flex flex-col sm:flex-row gap-4 justify-end">
+                                <button type="reset"
+                                    class="px-8 py-3 bg-bg text-text-muted font-bold rounded-xl hover:bg-gray-200 transition-all text-sm">ล้างข้อมูล</button>
+                                <button type="submit"
+                                    class="px-10 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 hover:scale-[1.02] transition-all text-sm flex items-center justify-center gap-2">
+                                    <i class="fas fa-paper-plane"></i> ยืนยันการกระจายชุดประเมิน
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Monitoring Overview -->
+                    <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                            <div>
+                                <h3 class="text-lg font-bold">สถานะความคืบหน้าการตอบกลับ</h3>
+                                <p class="text-xs text-text-muted">ข้อมูลอัปเดตล่าสุด: <span
+                                        class="font-bold text-primary">Live</span></p>
+                            </div>
+                            <div class="flex items-center gap-2 bg-bg p-2 rounded-lg">
+                                <span
+                                    class="text-[10px] font-bold text-text-muted uppercase px-2 border-r border-border">เกณฑ์คะแนน:</span>
+                                <div class="flex items-center gap-3 px-2">
+                                    <span class="flex items-center gap-1 text-[9px] font-bold"><span
+                                            class="rating-indicator bg-green-500"></span> 5-ดีเยี่ยม</span>
+                                    <span class="flex items-center gap-1 text-[9px] font-bold"><span
+                                            class="rating-indicator bg-blue-500"></span> 4-ดีมาก</span>
+                                    <span class="flex items-center gap-1 text-[9px] font-bold"><span
+                                            class="rating-indicator bg-red-500"></span> 1-ปรับปรุง</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <!-- Progress Row -->
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <span class="text-sm font-bold block">พนักงานทั่วไป (Staff)</span>
+                                        <span class="text-[10px] text-text-muted">ส่งไปทั้งหมด 500 รายการ</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xl font-bold text-primary">82%</span>
+                                        <span class="text-[10px] text-text-muted block">410 / 500 คน</span>
+                                    </div>
+                                </div>
+                                <div class="w-full h-3 bg-bg rounded-full overflow-hidden shadow-inner">
+                                    <div
+                                        class="bg-gradient-to-r from-primary to-orange-400 h-full w-[82%] rounded-full relative">
+                                        <div class="absolute inset-0 bg-surface/20 animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Row -->
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <span class="text-sm font-bold block">หัวหน้างาน (Manager)</span>
+                                        <span class="text-[10px] text-text-muted">ส่งไปทั้งหมด 45 รายการ</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xl font-bold text-blue-500">45%</span>
+                                        <span class="text-[10px] text-text-muted block">20 / 45 คน</span>
+                                    </div>
+                                </div>
+                                <div class="w-full h-3 bg-bg rounded-full overflow-hidden shadow-inner">
+                                    <div class="bg-gradient-to-r from-blue-500 to-blue-400 h-full w-[45%] rounded-full">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: System Tools -->
+                <div class="space-y-8">
+                    <!-- Statistics Doughnut -->
+                    <div class="bg-surface p-6 rounded-xl2 shadow-soft border border-border">
+                        <h3 class="font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-chart-pie text-primary"></i> สภาวะระบบ
+                        </h3>
+                        <div class="h-64">
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Quick Access Logs -->
+                    <div class="bg-surface p-6 rounded-xl2 shadow-soft border border-border">
+                        <h3 class="font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-bell text-primary"></i> กิจกรรมล่าสุด
+                        </h3>
+                        <div id="activity-list" class="space-y-4">
+                            <!-- Activities from Original or Script -->
+                            <div class="flex gap-4 p-3 bg-bg rounded-xl">
+                                <div
+                                    class="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center shrink-0">
+                                    <i class="fas fa-check text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold">สมชาย ใจดี ส่งแบบประเมินแล้ว</p>
+                                    <p class="text-[10px] text-text-muted">10 นาทีที่แล้ว</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Task List -->
+                    <div class="bg-surface p-6 rounded-xl2 shadow-soft border border-border">
+                        <h3 class="font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-tasks text-orange-500"></i> งานที่ต้องทำ
+                        </h3>
+                        <div class="space-y-3" id="todo-container">
+                            <div
+                                class="todo-item flex items-center gap-3 p-3 bg-bg rounded-xl border border-transparent hover:border-primary/20 transition-all cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 accent-primary rounded">
+                                <span class="text-xs font-medium">ตรวจสอบยอดสรุปเงินเดือน Q4</span>
+                            </div>
+                            <div
+                                class="todo-item flex items-center gap-3 p-3 bg-bg rounded-xl border border-transparent hover:border-primary/20 transition-all cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 accent-primary rounded">
+                                <span class="text-xs font-medium">สำรองข้อมูลประจำสัปดาห์</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. View Personnel -->
+        <section id="view-personnel" class="section-content">
+            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
+                    <div>
+                        <h2 class="text-xl font-bold">จัดการข้อมูลบุคลากร</h2>
+                        <p class="text-sm text-text-muted">ตรวจสอบ แก้ไข และจัดการสิทธิ์การเข้าใช้งาน</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="add-user-btn"
+                            class="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all flex items-center gap-2">
+                            <i class="fas fa-plus"></i> เพิ่มบุคลากร
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-6 relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-text-muted"></i>
+                    <input type="text" id="user-search" placeholder="ค้นหาชื่อ, รหัส, หรือบทบาท..."
+                        class="w-full pl-12 pr-4 py-3 bg-bg border border-border rounded-xl outline-none focus:ring-2 focus:ring-primary/20">
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-border">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>รหัส</th>
+                                <th>ชื่อ - นามสกุล</th>
+                                <th>แผนก / ตำแหน่ง</th>
+                                <th>บทบาท</th>
+                                <th>สถานะ</th>
+                                <th style="text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-list-tbody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Add Personnel View -->
+        <section id="view-add-personnel" class="section-content">
+            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold">เพิ่มบุคลากรใหม่</h2>
+                    <p class="text-sm text-text-muted">ลงทะเบียนบุคลากรใหม่เข้าสู่ระบบประเมิน</p>
+                </div>
+
+                <form id="add-personnel-form" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h4 class="text-xs font-bold text-primary uppercase tracking-widest">ข้อมูลส่วนตัว</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">ชื่อจริง
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="text" id="new-fname" required class="form-control">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">นามสกุล
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="text" id="new-lname" required class="form-control">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">อีเมล
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="email" id="new-email" required class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h4 class="text-xs font-bold text-primary uppercase tracking-widest">ข้อมูลการทำงาน</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label
+                                        class="block text-[10px] font-bold text-text-muted uppercase mb-1">รหัสพนักงาน
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="text" id="new-id" required class="form-control">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">แผนก /
+                                        ฝ่าย <span class="text-red-500">*</span></label>
+                                    <select id="new-dept" required class="form-control">
+                                        <option value="">-- เลือกแผนก --</option>
+                                        <option value="academic">ฝ่ายวิชาการ</option>
+                                        <option value="admin">ฝ่ายธุรการ</option>
+                                        <option value="personnel">ฝ่ายบุคคล</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-[10px] font-bold text-text-muted uppercase mb-1">สิทธิ์การใช้งาน
+                                        <span class="text-red-500">*</span></label>
+                                    <select id="new-role" required class="form-control">
+                                        <option value="appraisee">Appraisee</option>
+                                        <option value="assessor">Assessor</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-border flex justify-end gap-4">
+                        <button type="reset"
+                            class="px-8 py-3 bg-bg text-text-muted font-bold rounded-xl text-sm transition-all hover:bg-gray-200">ล้างข้อมูล</button>
+                        <button type="submit"
+                            class="px-10 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-orange-100 text-sm transition-all hover:bg-orange-600">บันทึกพนักงาน</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 4. Assessment Period View -->
+        <section id="view-assessment-period" class="section-content">
+            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
+                    <div>
+                        <h2 class="text-xl font-bold">รอบการประเมิน</h2>
+                        <p class="text-sm text-text-muted">กำหนดระยะเวลาและสถานะของแต่ละรอบ</p>
+                    </div>
+                    <button id="open-add-period-modal"
+                        class="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all">
+                        เพิ่มรอบการประเมิน
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-border">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ชื่อรอบการประเมิน</th>
+                                <th>วันเริ่มต้น</th>
+                                <th>วันสิ้นสุด</th>
+                                <th>สถานะ</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>รอบที่ 1/2568 (Q1)</strong></td>
+                                <td>01/10/2567</td>
+                                <td>31/12/2567</td>
+                                <td><span class="status-badge status-completed">เสร็จสิ้น</span></td>
+                                <td><button class="text-primary hover:underline font-bold">ดูรายละเอียด</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>รอบที่ 2/2568 (Q2)</strong></td>
+                                <td>01/01/2568</td>
+                                <td>31/03/2568</td>
+                                <td><span class="status-badge bg-orange-100 text-orange-600">กำลังดำเนินการ</span></td>
+                                <td><button class="text-primary hover:underline font-bold">แก้ไข</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Assessment Line -->
+        <section id="view-assessment-line" class="section-content">
+            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold"><i class="fas fa-project-diagram"></i> สายการประเมิน</h2>
+                    <p class="text-sm text-text-muted">กำหนดความสัมพันธ์และลำดับขั้นในการประเมินผลบุคลากร</p>
+                </div>
+
+                <div class="p-6 bg-orange-50 rounded-2xl border border-orange-100 mb-8">
+                    <p class="text-sm"><strong>คำแนะนำ:</strong>
+                        สายการประเมินเป็นตัวกำหนดว่าใครจะเป็นผู้รับการประเมินและใครจะเป็นผู้ประเมิน</p>
+                </div>
+
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold">โครงสร้างสายการประเมิน</h3>
+                    <button id="open-add-line-modal"
+                        class="px-6 py-2 bg-primary text-white text-xs font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all">เพิ่มสายการประเมิน</button>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-border">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ชื่อสายการประเมิน</th>
+                                <th>ประเภท</th>
+                                <th>จำนวนผู้รับ</th>
+                                <th>จำนวนผู้ประเมิน</th>
+                                <th>สถานะ</th>
+                                <th>การดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>สายวิชาการ - ระดับอาจารย์</strong></td>
+                                <td><span class="status-badge bg-blue-50 text-blue-600">บังคับบัญชา</span></td>
+                                <td>850</td>
+                                <td>45</td>
+                                <td><span class="status-badge status-active">ใช้งาน</span></td>
+                                <td><button class="text-primary font-bold">แก้ไข</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. View Assessment (Placeholder) -->
+        <section id="view-assessment" class="section-content">
+            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                <h2 class="text-xl font-bold mb-4">จัดการแบบประเมิน</h2>
+                <p class="text-text-muted">กำลังเตรียมข้อมูลสำหรับการจัดการแบบประเมินรายบุคคล...</p>
+            </div>
+        </section>
+
+        <!-- 5. Organization / Other views can be wrapped similarly... -->
+        <section id="view-organization" class="section-content">
+            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-bold">ตั้งค่าองค์กร</h2>
+                    <button id="open-add-dept-modal"
+                        class="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all">เพิ่มแผนก</button>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-border">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>รหัส</th>
+                                <th>ชื่อแผนก</th>
+                                <th>หัวหน้าแผนก</th>
+                                <th>จำนวนบุคลากร</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>DEPT001</td>
+                                <td><strong>ฝ่ายวิชาการ</strong></td>
+                                <td>ผศ.ดร.สมชาย ใจดี</td>
+                                <td>850</td>
+                                <td><button class="text-primary font-bold">แก้ไข</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-report-summary" class="section-content">
+            <!-- โหลดจากไฟล์แยกเพื่อความคลีนและประสิทธิภาพ -->
+            <div class="w-full h-full min-h-[85vh]">
+                <iframe src="reportSummary.html" class="w-full h-full border-none rounded-xl2" style="min-height: 85vh;"
+                    loading="lazy"></iframe>
+            </div>
+        </section>
+
+        <section id="view-report-statistics" class="section-content">
+            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                <h2 class="text-xl font-bold mb-8">รายงานสถิติแยกตามหัวข้อ</h2>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div class="h-[400px]">
+                        <canvas id="adminComparisonChart"></canvas>
+                    </div>
+                    <div class="flex flex-col items-center justify-center p-8 bg-bg rounded-2xl">
+                        <div class="w-full h-[300px]">
+                            <canvas id="adminScoreDistributionChart"></canvas>
+                        </div>
+                        <div id="admin-custom-legend"
+                            class="w-full mt-6 grid grid-cols-2 gap-3 text-[10px] font-bold uppercase tracking-wider">
+                            <div
+                                class="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
+                                <div class="flex items-center gap-2">
+                                    <span class="rating-indicator bg-green-500"></span>
+                                    <span class="text-text-muted">ดีเยี่ยม (5)</span>
+                                </div>
+                                <span id="admin-count-excellent" class="text-primary">0</span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
+                                <div class="flex items-center gap-2">
+                                    <span class="rating-indicator bg-blue-500"></span>
+                                    <span class="text-text-muted">ดีมาก (4)</span>
+                                </div>
+                                <span id="admin-count-verygood" class="text-primary">0</span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
+                                <div class="flex items-center gap-2">
+                                    <span class="rating-indicator bg-yellow-500"></span>
+                                    <span class="text-text-muted">ดี (3)</span>
+                                </div>
+                                <span id="admin-count-good" class="text-primary">0</span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
+                                <div class="flex items-center gap-2">
+                                    <span class="rating-indicator bg-purple-500"></span>
+                                    <span class="text-text-muted">พอใช้ (2)</span>
+                                </div>
+                                <span id="admin-count-fair" class="text-primary">0</span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-2 bg-surface rounded-lg border border-border">
+                                <div class="flex items-center gap-2">
+                                    <span class="rating-indicator bg-red-500"></span>
+                                    <span class="text-text-muted">ปรับปรุง (1)</span>
+                                </div>
+                                <span id="admin-count-improve" class="text-primary">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Admin Profile View -->
+        <section id="view-profile" class="section-content">
+            <header class="flex items-center gap-4 mb-8">
+                <button
+                    class="w-10 h-10 flex items-center justify-center bg-surface border border-border rounded-xl text-text-muted hover:text-primary transition-all shadow-sm"
+                    onclick="switchView('dashboard')">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div>
+                    <h1 class="text-2xl font-bold text-text">ข้อมูลส่วนตัวแอดมิน</h1>
+                    <p class="text-xs text-text-muted font-medium">จัดการข้อมูลบัญชีและการเข้าถึงระบบของคุณ</p>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fadeIn">
+                <!-- Profile Card (Left) -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-6 profile-avatar-container group">
+                            <img src="icon/user.png"
+                                class="w-full h-full rounded-full border-4 border-primary-light shadow-md"
+                                id="profile-preview">
+                            <div
+                                class="avatar-overlay absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                <i class="fas fa-camera text-white text-xl"></i>
+                            </div>
+                        </div>
+                        <h2 class="text-xl font-bold text-text username">Administrator</h2>
+                        <p class="text-sm font-bold text-primary mb-4">Super Admin</p>
+                        <div class="flex justify-center gap-2">
+                            <span
+                                class="px-3 py-1 bg-green-100 text-green-600 text-[10px] font-bold rounded-full uppercase">Active</span>
+                            <span
+                                class="px-3 py-1 bg-blue-100 text-blue-600 text-[10px] font-bold rounded-full uppercase">Verified</span>
+                        </div>
+                        <div class="mt-8 pt-8 border-t border-border space-y-4 text-left">
+                            <div class="flex items-center gap-3 text-sm">
+                                <i class="fas fa-envelope text-text-muted w-5"></i>
+                                <span class="text-text-muted">admin@cice.com</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <i class="fas fa-phone text-text-muted w-5"></i>
+                                <span class="text-text-muted">02-xxx-xxxx</span>
+                            </div>
+                        </div>
+                        <button id="logout-btn-profile"
+                            class="w-full mt-6 flex items-center justify-center gap-2 p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all font-bold text-xs">
+                            <i class="fas fa-sign-out-alt"></i> ออกจากระบบจากเครื่องนี้
+                        </button>
+                    </div>
+
+                    <!-- Statistics Card -->
+                    <div
+                        class="bg-primary p-6 rounded-xl2 shadow-lg shadow-orange-100 text-white relative overflow-hidden">
+                        <i class="fas fa-shield-halved absolute -right-4 -bottom-4 text-8xl opacity-10"></i>
+                        <h3 class="font-bold text-sm mb-4">สถิติการใช้งาน</h3>
+                        <div class="grid grid-cols-2 gap-4 relative z-10">
+                            <div>
+                                <p class="text-[10px] uppercase font-bold opacity-70">ล็อกอินล่าสุด</p>
+                                <p class="text-xs font-bold">วันนี้, 14:25</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold opacity-70">แคมเปญที่สร้าง</p>
+                                <p class="text-xs font-bold">12 รายการ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Form (Right) -->
+                <div class="lg:col-span-8 space-y-8">
+                    <div class="bg-surface rounded-xl2 shadow-soft border border-border overflow-hidden">
+                        <div class="p-6 border-b border-border flex items-center justify-between">
+                            <h3 class="font-bold">แก้ไขข้อมูลเบื้องต้น</h3>
+                            <span class="text-[10px] font-bold text-text-muted uppercase tracking-widest">General
+                                Settings</span>
+                        </div>
+                        <div class="p-8 space-y-6">
+                            <form id="admin-profile-update-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-muted uppercase mb-2">ชื่อผู้ใช้งาน</label>
+                                    <input type="text" value="Administrator"
+                                        class="w-full bg-bg border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-text-muted uppercase mb-2">อีเมล</label>
+                                    <input type="email" value="admin@cice.com"
+                                        class="w-full bg-bg border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-muted uppercase mb-2">เบอร์โทรศัพท์</label>
+                                    <input type="text" value="081-234-5678"
+                                        class="w-full bg-bg border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-muted uppercase mb-2">ตำแหน่ง</label>
+                                    <input type="text" value="เจ้าหน้าที่สารสนเทศ"
+                                        class="w-full bg-bg border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text"
+                                        readonly>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface rounded-xl2 shadow-soft border border-border overflow-hidden">
+                        <div class="p-6 border-b border-border">
+                            <h3 class="font-bold text-red-500">ความปลอดภัย</h3>
+                        </div>
+                        <div class="p-8 space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-muted uppercase mb-2">รหัสผ่านปัจจุบัน</label>
+                                    <input type="password" placeholder="••••••••"
+                                        class="w-full bg-bg border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-muted uppercase mb-2">รหัสผ่านใหม่</label>
+                                    <input type="password" placeholder="ระบุรหัสผ่านใหม่"
+                                        class="w-full bg-bg border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-text">
+                                </div>
+                            </div>
+                            <div class="flex justify-end gap-4 mt-4">
+                                <button form="admin-profile-update-form" type="submit"
+                                    class="px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all text-sm flex items-center gap-2">
+                                    <i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Command Center View -->
+        <section id="view-command-center" class="section-content">
+            <!-- Internal Tab Navigation -->
+            <div class="mb-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold flex items-center gap-2">
+                            <i class="fas fa-shield-alt text-primary"></i>
+                            Command Center
+                        </h1>
+                        <p class="text-xs text-text-muted mt-1">ศูนย์บัญชาการระบบจัดการหลังบ้าน</p>
+                    </div>
+                </div>
+                <nav class="flex bg-bg p-1.5 rounded-2xl gap-1 overflow-x-auto">
+                    <button onclick="switchCCTab('cc-users')" id="btn-cc-users"
+                        class="cc-tab cc-tab-active px-5 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 whitespace-nowrap">
+                        <i class="fas fa-users"></i> จัดการพนักงาน
+                    </button>
+                    <button onclick="switchCCTab('cc-approvals')" id="btn-cc-approvals"
+                        class="cc-tab px-5 py-2 rounded-xl text-sm font-bold text-text-muted hover:text-primary transition-all flex items-center gap-2 whitespace-nowrap">
+                        <i class="fas fa-check-circle"></i> การอนุมัติ
+                    </button>
+                    <button onclick="switchCCTab('cc-broadcast')" id="btn-cc-broadcast"
+                        class="cc-tab px-5 py-2 rounded-xl text-sm font-bold text-text-muted hover:text-primary transition-all flex items-center gap-2 whitespace-nowrap">
+                        <i class="fas fa-bullhorn"></i> ประกาศข่าว
+                    </button>
+                    <button onclick="switchCCTab('cc-settings')" id="btn-cc-settings"
+                        class="cc-tab px-5 py-2 rounded-xl text-sm font-bold text-text-muted hover:text-primary transition-all flex items-center gap-2 whitespace-nowrap">
+                        <i class="fas fa-cog"></i> ตั้งค่าระบบ
+                    </button>
+                </nav>
+            </div>
+
+            <!-- CC Tab 1: User Management -->
+            <div id="cc-tab-cc-users" class="cc-tab-content" style="display:block;">
+                <div class="bg-surface rounded-xl2 shadow-soft border border-border overflow-hidden">
+                    <div
+                        class="p-8 border-b border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold">รายชื่อพนักงานทั้งหมด</h2>
+                            <p class="text-sm text-text-muted">จัดการข้อมูล แก้ไขสิทธิ์ และระงับการใช้งาน</p>
+                        </div>
+                        <div class="flex gap-3 w-full md:w-auto">
+                            <div class="relative flex-1 md:w-64">
+                                <i
+                                    class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-text-muted text-sm"></i>
+                                <input type="text" placeholder="ค้นหาชื่อหรือไอดี..."
+                                    class="w-full pl-10 pr-4 py-3 bg-bg rounded-xl text-sm border border-border focus:ring-2 focus:ring-primary/20 outline-none">
+                            </div>
+                            <button onclick="ccExportData()"
+                                class="px-5 py-3 bg-text text-surface rounded-xl text-sm font-bold flex items-center gap-2 hover:opacity-80 transition-all">
+                                <i class="fas fa-file-export"></i> Export
+                            </button>
+                            <button
+                                class="px-5 py-3 bg-primary text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-orange-100">
+                                <i class="fas fa-plus"></i> เพิ่มคนใหม่
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-bg">
+                                    <th
+                                        class="text-center w-20 text-[10px] font-bold text-text-muted uppercase tracking-wider p-4">
+                                        รูป</th>
+                                    <th
+                                        class="text-left text-[10px] font-bold text-text-muted uppercase tracking-wider p-4">
+                                        พนักงาน</th>
+                                    <th
+                                        class="text-left text-[10px] font-bold text-text-muted uppercase tracking-wider p-4">
+                                        แผนก / ตำแหน่ง</th>
+                                    <th
+                                        class="text-left text-[10px] font-bold text-text-muted uppercase tracking-wider p-4">
+                                        สถานะ</th>
+                                    <th
+                                        class="text-left text-[10px] font-bold text-text-muted uppercase tracking-wider p-4">
+                                        เข้าร่วมเมื่อ</th>
+                                    <th
+                                        class="text-right text-[10px] font-bold text-text-muted uppercase tracking-wider p-4">
+                                        จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-bg/50 transition-all border-b border-border/50">
+                                    <td class="text-center p-4"><img
+                                            src="https://ui-avatars.com/api/?name=Thawatchai&background=FF6D1F&color=fff"
+                                            class="w-10 h-10 rounded-full mx-auto"></td>
+                                    <td class="p-4">
+                                        <p class="font-bold text-text text-sm">ธวัชชัย สายลม</p>
+                                        <p class="text-[11px] text-text-muted">EMP-67001</p>
+                                    </td>
+                                    <td class="p-4">
+                                        <p class="text-sm">Design & Creative</p>
+                                        <p class="text-[11px] text-text-muted">Senior UI Designer</p>
+                                    </td>
+                                    <td class="p-4"><span
+                                            class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[11px] font-bold">Active</span>
+                                    </td>
+                                    <td class="text-sm text-text-muted p-4">12 ม.ค. 2024</td>
+                                    <td class="text-right p-4">
+                                        <div class="flex justify-end gap-2">
+                                            <button title="แก้ไข"
+                                                class="w-9 h-9 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white transition-all"><i
+                                                    class="fas fa-edit"></i></button>
+                                            <button title="ระงับ" onclick="ccSuspendUser('ธวัชชัย')"
+                                                class="w-9 h-9 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all"><i
+                                                    class="fas fa-user-slash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-bg/50 transition-all border-b border-border/50">
+                                    <td class="text-center p-4"><img
+                                            src="https://ui-avatars.com/api/?name=Wipavee&background=3b82f6&color=fff"
+                                            class="w-10 h-10 rounded-full mx-auto"></td>
+                                    <td class="p-4">
+                                        <p class="font-bold text-text text-sm">วิภาวี สุขใจ</p>
+                                        <p class="text-[11px] text-text-muted">EMP-67042</p>
+                                    </td>
+                                    <td class="p-4">
+                                        <p class="text-sm">Technology</p>
+                                        <p class="text-[11px] text-text-muted">Full Stack Developer</p>
+                                    </td>
+                                    <td class="p-4"><span
+                                            class="px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-[11px] font-bold">On
+                                            Probation</span></td>
+                                    <td class="text-sm text-text-muted p-4">05 ก.พ. 2024</td>
+                                    <td class="text-right p-4">
+                                        <div class="flex justify-end gap-2">
+                                            <button
+                                                class="w-9 h-9 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white transition-all"><i
+                                                    class="fas fa-edit"></i></button>
+                                            <button onclick="ccSuspendUser('วิภาวี')"
+                                                class="w-9 h-9 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all"><i
+                                                    class="fas fa-user-slash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CC Tab 2: Approval Center -->
+            <div id="cc-tab-cc-approvals" class="cc-tab-content" style="display:none;">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    <div class="lg:col-span-3 space-y-6">
+                        <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                            <h3 class="text-xl font-bold mb-6">รายการรอการตัดสินใจ</h3>
+                            <div class="space-y-4">
+                                <div
+                                    class="flex flex-col md:flex-row md:items-center justify-between p-6 bg-bg rounded-3xl gap-4">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center text-xl">
+                                            <i class="fas fa-plane-departure"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold">ขออนุมัติลากิจ (ไปธุระครอบครัว)</p>
+                                            <p class="text-xs text-text-muted">โดย <b>สมปอง ใจดี</b> • ยื่นเมื่อ 2 ชม.
+                                                ที่แล้ว</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-right px-4">
+                                            <p class="text-xs font-bold text-text-muted uppercase">ระยะเวลา</p>
+                                            <p class="font-bold text-primary">3 วัน</p>
+                                        </div>
+                                        <button onclick="ccActionApproval('reject')"
+                                            class="px-5 py-3 rounded-xl border border-red-200 text-red-500 font-bold hover:bg-red-50 transition-all">ปฏิเสธ</button>
+                                        <button onclick="ccActionApproval('approve')"
+                                            class="px-5 py-3 rounded-xl bg-green-500 text-white font-bold shadow-lg shadow-green-100 hover:bg-green-600 transition-all">อนุมัติ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-text p-8 rounded-xl2 text-surface">
+                            <p class="text-xs font-bold text-text-muted uppercase mb-2">ภาพรวมการอนุมัติ</p>
+                            <h4 class="text-3xl font-bold">12 รายการ</h4>
+                            <p class="text-sm text-text-muted mt-2">คำขอทั้งหมดที่ยังไม่ได้จัดการในเดือนนี้</p>
+                            <div class="mt-8 space-y-4">
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-text-muted">ลางาน</span><span class="font-bold">8</span></div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-text-muted">เบิกค่าใช้จ่าย</span><span class="font-bold">3</span>
+                                </div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-text-muted">อื่นๆ</span><span class="font-bold">1</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CC Tab 3: Broadcast -->
+            <div id="cc-tab-cc-broadcast" class="cc-tab-content" style="display:none;">
+                <div class="max-w-3xl mx-auto bg-surface p-10 rounded-xl2 shadow-soft border border-border">
+                    <div class="text-center mb-10">
+                        <div
+                            class="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center text-3xl mx-auto mb-4">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">ประกาศข่าวสารด่วน</h2>
+                        <p class="text-text-muted">ข้อความจะเด้งไปที่หน้าจอพนักงานทุกคนที่กำลังออนไลน์</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-bold text-text-muted uppercase mb-3">หัวข้อประกาศ</label>
+                            <input type="text" id="ccBcTitle" placeholder="เช่น แจ้งปิดปรับปรุงระบบคืนนี้"
+                                class="w-full px-6 py-4 bg-bg border border-border rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-text-muted uppercase mb-3">รายละเอียด</label>
+                            <textarea id="ccBcBody" rows="5" placeholder="ระบุรายละเอียดที่ต้องการแจ้งพนักงาน..."
+                                class="w-full px-6 py-4 bg-bg border border-border rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 transition-all"></textarea>
+                        </div>
+                        <div class="flex items-center gap-4 bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                            <i class="fas fa-info-circle text-primary"></i>
+                            <p class="text-xs text-orange-800">ประกาศนี้จะส่งผลต่อพนักงานทั้งหมด <b>45 คน</b>
+                                ทันทีเมื่อกดส่ง</p>
+                        </div>
+                        <button onclick="ccSendBroadcast()"
+                            class="w-full py-5 bg-primary text-white rounded-2xl font-bold text-lg shadow-xl shadow-orange-100 hover:scale-[1.01] active:scale-95 transition-all">
+                            ส่งประกาศทันที <i class="fas fa-bolt ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CC Tab 4: System Settings -->
+            <div id="cc-tab-cc-settings" class="cc-tab-content" style="display:none;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div
+                        class="bg-surface p-8 rounded-xl2 border border-border shadow-soft flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">โหมดปิดปรับปรุง (Maintenance)</h4>
+                            <p class="text-sm text-text-muted">ปิดการใช้งานชั่วคราวสำหรับพนักงานทั่วไป</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer">
+                            <div
+                                class="w-14 h-8 bg-bg peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary">
+                            </div>
+                        </label>
+                    </div>
+                    <div
+                        class="bg-surface p-8 rounded-xl2 border border-border shadow-soft flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">แจ้งเตือนผ่าน Line Notify</h4>
+                            <p class="text-sm text-text-muted">ส่งข้อมูลสรุปงานเข้ากลุ่มไลน์ทุกเช้า</p>
+                        </div>
+                        <button onclick="ccEditLineToken()"
+                            class="px-4 py-2 bg-bg rounded-xl text-sm font-bold text-text-muted hover:bg-border transition-all">ตั้งค่า
+                            Token</button>
+                    </div>
+                    <div class="bg-surface p-8 rounded-xl2 border border-border shadow-soft md:col-span-2">
+                        <h4 class="font-bold text-lg mb-6">ข้อมูลองค์กร</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label
+                                    class="block text-[10px] font-bold text-text-muted uppercase mb-2">ชื่อบริษัท</label>
+                                <input type="text" value="วิทยาลัยการอาชีพชนแดน"
+                                    class="w-full p-4 bg-bg rounded-xl text-sm border border-border">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[10px] font-bold text-text-muted uppercase mb-2">เวลาเข้างาน</label>
+                                <input type="time" value="08:30"
+                                    class="w-full p-4 bg-bg rounded-xl text-sm border border-border">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[10px] font-bold text-text-muted uppercase mb-2">เวลาออกงาน</label>
+                                <input type="time" value="16:30"
+                                    class="w-full p-4 bg-bg rounded-xl text-sm border border-border">
+                            </div>
+                        </div>
+                        <button
+                            class="mt-8 px-8 py-4 bg-text text-surface rounded-2xl font-bold text-sm hover:opacity-80 transition-all">บันทึกการตั้งค่า</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JS References -->
+    <script src="../js/auth-guard.js"></script>
+    <script src="../js/admin/script_admin.js"></script>
+    <script>
+        // === Command Center Tab Switching ===
+        function switchCCTab(tabId) {
+            document.querySelectorAll('.cc-tab-content').forEach(el => el.style.display = 'none');
+            document.getElementById('cc-tab-' + tabId).style.display = 'block';
+            document.querySelectorAll('.cc-tab').forEach(btn => {
+                btn.classList.remove('cc-tab-active');
+                btn.classList.add('text-text-muted');
+            });
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('cc-tab-active');
+            activeBtn.classList.remove('text-text-muted');
+        }
+
+        function ccSuspendUser(name) {
+            Swal.fire({
+                title: 'ยืนยันการระงับ?',
+                text: `คุณกำลังจะระงับการเข้าถึงของ ${name} จากระบบทั้งหมด`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก',
+                customClass: { popup: 'rounded-[2rem]' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ icon: 'success', title: 'ระงับพนักงานแล้ว', showConfirmButton: false, timer: 1500, customClass: { popup: 'rounded-[2rem]' } });
+                }
+            });
+        }
+
+        function ccActionApproval(type) {
+            const isApprove = type === 'approve';
+            Swal.fire({
+                icon: isApprove ? 'success' : 'info',
+                title: isApprove ? 'อนุมัติคำขอแล้ว' : 'ปฏิเสธคำขอแล้ว',
+                confirmButtonColor: isApprove ? '#22c55e' : '#64748b',
+                customClass: { popup: 'rounded-[2rem]' }
+            });
+        }
+
+        function ccSendBroadcast() {
+            const title = document.getElementById('ccBcTitle').value;
+            if (!title) return Swal.fire({ icon: 'error', title: 'กรุณากรอกหัวข้อ', customClass: { popup: 'rounded-[2rem]' } });
+            Swal.fire({
+                title: 'ส่งประกาศสำเร็จ!',
+                text: 'พนักงานทุกคนได้รับข้อความแล้ว',
+                icon: 'success',
+                confirmButtonColor: '#FF6D1F',
+                customClass: { popup: 'rounded-[2rem]' }
+            });
+            document.getElementById('ccBcTitle').value = '';
+            document.getElementById('ccBcBody').value = '';
+        }
+
+        function ccExportData() {
+            Swal.fire({
+                title: 'กำลังเตรียมข้อมูล...',
+                html: 'ระบบกำลังรวบรวมไฟล์ Excel ของคุณ',
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: () => Swal.showLoading(),
+                customClass: { popup: 'rounded-[2rem]' }
+            }).then(() => {
+                Swal.fire({ icon: 'success', title: 'ดาวน์โหลดสำเร็จ', text: 'ตรวจสอบในโฟลเดอร์ Download ของคุณ', customClass: { popup: 'rounded-[2rem]' } });
+            });
+        }
+
+        function ccEditLineToken() {
+            Swal.fire({
+                title: 'Line Notify Token',
+                input: 'password',
+                inputPlaceholder: 'ใส่ Token ของคุณที่นี่',
+                confirmButtonColor: '#FF6D1F',
+                customClass: { popup: 'rounded-[2rem]' }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+﻿/* d:\watcharaphon18\my_app\css\style_evaluator.css */
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #F8FAF7;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-link {
+    transition: all 0.3s ease;
+}
+
+.sidebar-link.active {
+    background-color: rgba(255, 109, 31, 0.1);
+    color: #FF6D1F;
+    border-right: 4px solid #FF6D1F;
+}
+
+.stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.glass-header {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* Additional Evaluator Specific Styles */
+.section-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.section-content.active {
+    display: block;
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Chart adjustments */
+canvas {
+    width: 100% !important;
+}

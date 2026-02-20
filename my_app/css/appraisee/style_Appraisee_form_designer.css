@@ -1,0 +1,83 @@
+/* css/style_Appraisee_form_designer.css */
+/* Styles specific to the Evaluation Form Designer */
+
+:root {
+    --brand-orange: #F97316;
+    /* From Dashboard */
+    --brand-bg: #F1F5F9;
+    --brand-dark: #334155;
+    /* Reuse variable from existing CSS if possible */
+}
+
+/* Ensure these styles don't break the existing dashboard layout */
+.card-main {
+    background: #FFFFFF;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.input-custom {
+    background: #F8FAFC;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 1rem;
+    transition: all 0.2s;
+}
+
+.input-custom:focus {
+    border-color: var(--brand-orange);
+    background: #FFFFFF;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+}
+
+.btn-orange {
+    background-color: var(--brand-orange);
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-orange:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.btn-outline-orange {
+    border: 1.5px solid var(--brand-orange);
+    color: var(--brand-orange);
+    background: white;
+}
+
+.btn-outline-orange:hover {
+    background: rgba(249, 115, 22, 0.05);
+}
+
+.stepper-icon {
+    background-color: var(--brand-orange);
+    color: white;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Animation */
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

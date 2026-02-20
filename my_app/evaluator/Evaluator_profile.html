@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่าโปรไฟล์ผู้ประเมิน - ระบบประเมินบุคลากร</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="../css/evaluator/style_evaluator_profile.css">
+</head>
+
+<body class="text-slate-700">
+
+    <div class="min-h-screen pb-12">
+        <!-- Navigation Header -->
+        <nav class="bg-white border-b sticky top-0 z-50">
+            <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-theme-orange rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-user-shield text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">Evaluator Profile</h1>
+                        <p class="text-xs text-slate-500">จัดการข้อมูลผู้ประเมินและสิทธิ์เข้าถึง</p>
+                    </div>
+                </div>
+                <a href="dashboardEvaluator.html"
+                    class="text-slate-500 hover:text-orange-600 font-medium flex items-center gap-2 transition-colors">
+                    <i class="fas fa-arrow-left"></i> กลับหน้าหลัก
+                </a>
+            </div>
+        </nav>
+
+        <main class="max-w-5xl mx-auto px-4 mt-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Left Column: Quick Profile -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl card-shadow overflow-hidden border border-slate-100">
+                        <div class="h-24 bg-gradient-to-r from-orange-400 to-orange-600"></div>
+                        <div class="px-6 pb-6">
+                            <div class="relative -mt-12 mb-4 flex justify-center">
+                                <div class="relative">
+                                    <img id="avatar-preview"
+                                        src="https://ui-avatars.com/api/?name=Admin+User&background=f97316&color=fff&size=128"
+                                        alt="Evaluator"
+                                        class="w-24 h-24 rounded-2xl border-4 border-white object-cover shadow-sm bg-white">
+                                    <label for="upload-photo"
+                                        class="absolute -bottom-2 -right-2 w-8 h-8 bg-white border border-slate-200 rounded-full flex items-center justify-center text-orange-600 cursor-pointer shadow-md hover:bg-orange-50 transition-colors">
+                                        <i class="fas fa-camera text-xs"></i>
+                                    </label>
+                                    <input type="file" id="upload-photo" class="hidden" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="text-center mb-6">
+                                <h2 class="font-bold text-xl text-slate-800" id="display-name">ดร. วิเชียร รักเรียน</h2>
+                                <p class="text-sm text-slate-500">รองผู้อำนวยการฝ่ายวิชาการ</p>
+                                <div
+                                    class="mt-3 inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold uppercase tracking-wider">
+                                    Administrator
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 border-t pt-6">
+                                <div class="flex items-center gap-3 text-sm">
+                                    <div
+                                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <span class="text-slate-600">wichian.r@cice.ac.th</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm">
+                                    <div
+                                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <span class="text-slate-600">ระดับสิทธิ์: ผู้ดูแลระบบ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Settings Form -->
+                <div class="lg:col-span-2 space-y-6">
+
+                    <!-- Basic Info -->
+                    <section class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden">
+                        <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-id-card theme-orange"></i> ข้อมูลบัญชีผู้ใช้งาน
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-sm font-semibold text-slate-600">ชื่อ-นามสกุล</label>
+                                    <input type="text" value="ดร. วิเชียร รักเรียน"
+                                        class="p-2.5 border rounded-xl bg-slate-50 border-slate-200 input-focus transition-all">
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-sm font-semibold text-slate-600">ตำแหน่งงาน</label>
+                                    <input type="text" value="รองผู้อำนวยการฝ่ายวิชาการ"
+                                        class="p-2.5 border rounded-xl bg-slate-50 border-slate-200 input-focus transition-all">
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-sm font-semibold text-slate-600">สังกัด/แผนก</label>
+                                    <input type="text" value="สำนักผู้อำนวยการ"
+                                        class="p-2.5 border rounded-xl bg-slate-50 border-slate-200 input-focus transition-all">
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-sm font-semibold text-slate-600">เบอร์โทรศัพท์</label>
+                                    <input type="text" value="02-123-4567"
+                                        class="p-2.5 border rounded-xl bg-slate-50 border-slate-200 input-focus transition-all">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Digital Signature -->
+                    <section class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden">
+                        <div class="p-6 border-b border-slate-50">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-signature theme-orange"></i> ลายเซ็นดิจิทัล (สำหรับอนุมัติผล)
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-500 mb-4">
+                                ลายเซ็นนี้จะถูกใช้แนบในเอกสารสรุปผลการประเมินที่ผ่านการอนุมัติแล้ว</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="signature-pad" onclick="uploadSignature()">
+                                    <div class="text-center">
+                                        <i class="fas fa-cloud-upload-alt text-2xl text-slate-300 mb-2"></i>
+                                        <p class="text-xs text-slate-400">คลิกเพื่ออัปโหลดไฟล์ลายเซ็น (PNG)</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-center border rounded-xl bg-slate-50 border-slate-100 p-4">
+                                    <div class="text-center">
+                                        <p class="text-xs text-slate-400 mb-2">ตัวอย่างลายเซ็นปัจจุบัน</p>
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Jon_Kirsch_Signature.png"
+                                            alt="Signature Sample" class="max-h-16 opacity-60 grayscale">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Security -->
+                    <section class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden">
+                        <div class="p-6 border-b border-slate-50">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fas fa-key theme-orange"></i> ความปลอดภัย
+                            </h3>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                                <div>
+                                    <p class="font-semibold text-slate-700">เปลี่ยนรหัสผ่าน</p>
+                                    <p class="text-xs text-slate-500">อัปเดตรหัสผ่านเพื่อความปลอดภัยของบัญชี</p>
+                                </div>
+                                <button onclick="changePassword()"
+                                    class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">จัดการ</button>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                                <div>
+                                    <p class="font-semibold text-slate-700">การยืนยันตัวตน 2 ขั้นตอน (2FA)</p>
+                                    <p class="text-xs text-slate-500 text-orange-600 font-medium">แนะนำให้เปิดใช้งาน</p>
+                                </div>
+                                <div
+                                    class="relative inline-block w-12 h-6 transition duration-200 ease-in-out bg-slate-200 rounded-full cursor-pointer">
+                                    <input type="checkbox"
+                                        class="absolute w-6 h-6 bg-white border-2 border-slate-200 rounded-full appearance-none cursor-pointer checked:right-0 right-6 checked:border-orange-500 transition-all duration-200">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-end gap-3 pt-4">
+                        <button
+                            class="px-6 py-2.5 rounded-xl border border-slate-200 font-semibold text-slate-600 hover:bg-slate-50 transition-all">ยกเลิก</button>
+                        <button onclick="saveSettings()"
+                            class="px-8 py-2.5 rounded-xl bg-theme-orange text-white font-semibold hover:bg-orange-600 shadow-lg shadow-orange-200 transition-all">บันทึกการตั้งค่าทั้งหมด</button>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- External JS -->
+    <script src="../js/evaluator/script_evaluator_profile.js"></script>
+</body>
+
+</html>

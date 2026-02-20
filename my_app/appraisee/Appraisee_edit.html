@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แก้ไขข้อมูลส่วนตัว - CICE Modern System</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="../css/appraisee/style_Appraisee_edit.css">
+</head>
+
+<body>
+
+    <div class="edit-container">
+        <div class="header-banner">
+            <div class="back-nav">
+                <a href="Appraisee_data.html" class="btn-back-circle" title="กลับ">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+
+        <form id="main-edit-form">
+            <div class="avatar-edit-wrapper">
+                <div class="profile-img-container">
+                    <img id="profile-preview"
+                        src="https://ui-avatars.com/api/?name=Somchai+Jaidee&background=FF6D1F&color=fff&size=200"
+                        alt="Profile Image">
+                    <label for="img-upload" class="upload-overlay">
+                        <i class="fas fa-pen"></i>
+                    </label>
+                    <input type="file" id="img-upload" hidden accept="image/*">
+                </div>
+                <h3 style="margin-top: 15px; font-weight: 700;">แก้ไขข้อมูลโปรไฟล์</h3>
+                <p style="color: var(--text-dim); font-size: 0.8rem;">รหัสบุคลากร: <span
+                        id="staff-id-text">67-0042</span></p>
+            </div>
+
+            <div class="form-content">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>ชื่อ-นามสกุล</label>
+                        <input type="text" id="fullname" value="สมชาย ใจดี" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>ตำแหน่งปัจจุบัน</label>
+                        <input type="text" id="position" value="ครูชำนาญการ">
+                    </div>
+
+                    <div class="input-group">
+                        <label>แผนก / ฝ่าย</label>
+                        <select id="dept">
+                            <option value="คอมพิวเตอร์ธุรกิจ" selected>แผนกวิชาคอมพิวเตอร์ธุรกิจ</option>
+                            <option value="ช่างยนต์">แผนกวิชาช่างยนต์</option>
+                            <option value="การบัญชี">แผนกวิชาการบัญชี</option>
+                            <option value="สามัญสัมพันธ์">แผนกวิชาสามัญสัมพันธ์</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>เบอร์โทรศัพท์ติดต่อ</label>
+                        <input type="tel" id="phone" value="081-234-5678">
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>อีเมลติดต่อ (Official)</label>
+                        <input type="email" id="email" value="somchai.j@cice.ac.th">
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>วุฒิการศึกษา</label>
+                        <input type="text" id="education" value="ปริญญาโท ครุศาสตร์อุตสาหกรรม (คอมพิวเตอร์)">
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>ความเชี่ยวชาญเพิ่มเติม</label>
+                        <textarea id="expertise"
+                            rows="3">การพัฒนาเว็บแอปพลิเคชัน, ระบบฐานข้อมูล Cloud, กราฟิกดีไซน์พื้นฐาน</textarea>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="btn btn-outline" onclick="window.history.back()">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check-circle"></i> บันทึกข้อมูล
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- External JS -->
+    <script src="../js/appraisee/script_Appraisee_edit.js"></script>
+</body>
+
+</html>

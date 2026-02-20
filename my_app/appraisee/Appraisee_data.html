@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรไฟล์พรีเมียม - CICE Assessment System</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="../css/appraisee/style_Appraisee_data.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <a href="dashboardAppraisee.html" class="btn-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>กลับสู่แดชบอร์ด</span>
+            </a>
+            <div style="font-size: 0.9rem; color: #999;">
+                อัปเดตล่าสุด: <span id="last-update">15 มีนาคม 2025</span>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <!-- Hero Card -->
+            <div class="card-hero">
+                <div class="hero-content">
+                    <div class="profile-pic-container">
+                        <img id="img-profile"
+                            src="https://ui-avatars.com/api/?name=Somchai+Jaidee&background=FF6D1F&color=fff&size=200"
+                            alt="Profile">
+                    </div>
+                    <h1 class="hero-name" id="text-name">กำลังโหลด...</h1>
+                    <span class="hero-pos" id="text-position">-</span>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <h4 id="stat-score">92%</h4>
+                            <p>คะแนนล่าสุด</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4 id="stat-rank">A</h4>
+                            <p>เกรดเฉลี่ย</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4 id="stat-years">5</h4>
+                            <p>อายุงาน (ปี)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Info Card -->
+            <div class="card-info">
+                <div class="info-group">
+                    <h3><i class="fas fa-user-circle"></i> ประวัติการทำงาน</h3>
+                    <div class="info-item">
+                        <span class="info-label">รหัสพนักงาน</span>
+                        <span class="info-value" id="val-staff-id">67-XXXX</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">แผนก / ฝ่าย</span>
+                        <span class="info-value" id="val-dept">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">วุฒิการศึกษา</span>
+                        <span class="info-value" id="val-degree">-</span>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <h3><i class="fas fa-envelope-open-text"></i> ข้อมูลการติดต่อ</h3>
+                    <div class="info-item">
+                        <span class="info-label">อีเมลวิทยาลัย</span>
+                        <span class="info-value" id="val-email">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">เบอร์โทรศัพท์</span>
+                        <span class="info-value" id="val-phone">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ความเชี่ยวชาญ</span>
+                        <span class="info-value" id="val-expertise">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Card (Full Width Bottom) -->
+            <div class="card-action">
+                <div class="action-text">
+                    <h3>ต้องการปรับปรุงข้อมูล?</h3>
+                    <p>คุณสามารถแก้ไขข้อมูลส่วนตัวและทักษะความชำนาญเพื่อให้ระบบประเมินแม่นยำขึ้น</p>
+                </div>
+                <a href="Appraisee_edit.html" class="btn-edit">
+                    <i class="fas fa-pen-nib"></i>
+                    แก้ไขข้อมูลโปรไฟล์
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JS -->
+    <script src="../js/appraisee/script_Appraisee_data.js"></script>
+</body>
+
+</html>

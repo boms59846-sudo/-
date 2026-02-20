@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ (ผู้ดูแลระบบ) - CICE Assessment System</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary: #ef4444;
+            --primary-dark: #b91c1c;
+            --primary-glow: rgba(239, 68, 68, 0.25);
+            --dark: #1a0505;
+            --dark-surface: #2b0b0b;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #f8fafc;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass: rgba(255, 255, 255, 0.75);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: #0f172a;
+            overflow: hidden;
+        }
+
+        /* ======================== */
+        /*   LEFT PANEL - VISUAL   */
+        /* ======================== */
+        .panel-left {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 50%, #1e1b4b 100%);
+        }
+
+        /* Animated gradient orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #3b82f6;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -3s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: #a855f7;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -5s;
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(30px, -20px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-20px, 30px) scale(0.95);
+            }
+
+            75% {
+                transform: translate(20px, 20px) scale(1.05);
+            }
+        }
+
+        .panel-left-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 3rem;
+            max-width: 500px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .brand-logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 2rem;
+            border-radius: 24px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.5s ease;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.1) rotate(-3deg);
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(255, 109, 31, 0.3));
+        }
+
+        .panel-left h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .panel-left h1 span {
+            background: linear-gradient(135deg, #FF6D1F, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .panel-left p {
+            font-size: 1rem;
+            color: #94a3b8;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* Feature pills */
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        .pill:hover {
+            background: rgba(255, 109, 31, 0.15);
+            border-color: rgba(255, 109, 31, 0.3);
+            color: white;
+        }
+
+        .pill i {
+            color: var(--primary);
+            font-size: 0.7rem;
+        }
+
+        /* ========================= */
+        /*   RIGHT PANEL - LOGIN     */
+        /* ========================= */
+        .panel-right {
+            width: 520px;
+            min-width: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            position: relative;
+            padding: 3rem;
+        }
+
+        .panel-right::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), #3b82f6, #a855f7);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 380px;
+            animation: fadeInRight 0.8s ease-out;
+        }
+
+        .login-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .login-header .greeting {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-header .greeting::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 1px;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-family: 'Prompt', sans-serif;
+            color: var(--text-primary);
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        .input-wrapper input:focus+i,
+        .input-wrapper input:focus~i {
+            color: var(--primary);
+        }
+
+        .input-wrapper:has(input:focus) i {
+            color: var(--primary);
+        }
+
+        /* Password toggle */
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary);
+        }
+
+        /* Remember me & Forgot */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .remember-me span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .forgot-link {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* Login Button */
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), #f59e0b);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Prompt', sans-serif;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 109, 31, 0.35);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Register link */
+        .register-section {
+            text-align: center;
+        }
+
+        .register-section p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .register-section a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .register-section a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* Home link */
+        .home-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 2rem;
+            padding: 10px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .home-link:hover {
+            color: var(--primary);
+            background: rgba(255, 109, 31, 0.05);
+        }
+
+        /* ======================== */
+        /*      ANIMATIONS         */
+        /* ======================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ======================== */
+        /*      RESPONSIVE         */
+        /* ======================== */
+        @media (max-width: 960px) {
+            body {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+
+            .panel-left {
+                min-height: 40vh;
+                padding: 3rem 2rem;
+            }
+
+            .panel-left h1 {
+                font-size: 1.8rem;
+            }
+
+            .panel-right {
+                width: 100%;
+                min-width: unset;
+                padding: 2.5rem 1.5rem;
+            }
+
+            .panel-right::before {
+                width: 100%;
+                height: 4px;
+                left: 0;
+                top: 0;
+            }
+
+            .feature-pills {
+                display: none;
+            }
+
+            .home-link-top {
+                top: 1.5rem;
+                left: 1.5rem;
+            }
+        }
+
+        /* Top Home Link */
+        .home-link-top {
+            position: absolute;
+            top: 2rem;
+            left: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .home-link-top:hover {
+            color: var(--primary);
+            background: rgba(255, 109, 31, 0.05);
+            transform: translateX(-4px);
+        }
+
+        @media (max-width: 480px) {
+            .panel-left {
+                min-height: 30vh;
+                padding: 2rem 1.5rem;
+            }
+
+            .panel-left h1 {
+                font-size: 1.5rem;
+            }
+
+            .panel-left p {
+                font-size: 0.85rem;
+            }
+
+            .brand-logo {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 1.5rem;
+            }
+
+            .login-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .panel-right {
+                padding: 2rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================ -->
+    <!--         LEFT PANEL - BRANDING VISUAL         -->
+    <!-- ============================================ -->
+    <div class="panel-left">
+        <!-- Animated Orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <!-- Floating Particles -->
+        <div class="particles" id="particles"></div>
+
+        <div class="panel-left-content">
+            <div class="brand-logo">
+                <img src="../icon/cice.png" alt="CICE Logo">
+            </div>
+            <h1>Administrator <span>Portal</span></h1>
+            <p class="subtitle">ระบบบริหารจัดการสำหรับผู้ดูแลระบบ<br>วิทยาลัยการอาชีพชนแดน</p>
+
+
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!--          RIGHT PANEL - LOGIN FORM            -->
+    <!-- ============================================ -->
+    <div class="panel-right">
+        <a href="../index.html" class="home-link-top">
+            <i class="fas fa-arrow-left"></i> กลับหน้าหลัก
+        </a>
+        <div class="login-container">
+            <div class="login-header">
+                <div class="greeting">สำหรับผู้ดูแลระบบ</div>
+                <h2>เข้าสู่ระบบ Admin</h2>
+                <p>จัดการข้อมูลและตั้งค่าระบบประเมินผล</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">ชื่อผู้ใช้งาน (Admin)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="ระบุชื่อผู้ใช้งาน" required
+                            autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">รหัสผ่าน</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="ระบุรหัสผ่าน" required
+                            autocomplete="current-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword()"
+                            aria-label="แสดงรหัสผ่าน">
+                            <i class="fas fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox">
+                        <span>จดจำฉัน</span>
+                    </label>
+                    <a href="#" class="forgot-link">ลืมรหัสผ่าน?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="login-btn">
+                    เข้าสู่ระบบ
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>ยังไม่มีบัญชีผู้ใช้งาน?</span>
+            </div>
+
+            <div class="register-section">
+                <p><a href="register.html">ลงทะเบียนเข้าใช้งาน</a></p>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!--               JAVASCRIPT                     -->
+    <!-- ============================================ -->
+    <script>
+        // === Particle Generator ===
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const count = 25;
+
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 8 + 6) + 's';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // === Toggle Password Visibility ===
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eye-icon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // === Login Handler ===
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('login-btn');
+            const originalContent = btn.innerHTML;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบ...';
+
+            setTimeout(() => {
+                if (username === 'admin' && password === '111') {
+                    // Save session for auth-guard
+                    const user = {
+                        id: 'admin_01',
+                        username: username,
+                        role: 'admin',
+                        firstName: 'Administrator',
+                        lastName: 'System',
+                        loginTime: new Date().toISOString()
+                    };
+                    localStorage.setItem('cice_user', JSON.stringify(user));
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'เข้าสู่ระบบสำเร็จ',
+                        text: 'กำลังนำคุณไปที่หน้า Dashboard ผู้ดูแลระบบ...',
+                        timer: 1500,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        background: '#fff',
+                        color: '#1e293b'
+                    }).then(() => {
+                        window.location.href = 'dashboardAdmin.html';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เข้าสู่ระบบไม่สำเร็จ',
+                        text: 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง (สำหรับผู้ดูแลระบบ)',
+                        confirmButtonText: 'ลองใหม่อีกครั้ง'
+                    });
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                }
+            }, 800);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบประเมินผลการปฏิบัติงาน - CICE Assessment</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="../css/evaluator/style_evaluator.css">
+    <link rel="stylesheet" href="../css/evaluator/estimate.css">
+</head>
+
+<body class="bg-[#F8FAF7] text-slate-800 font-['Prompt']">
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 w-72 bg-white shadow-xl z-50 transition-transform -translate-x-full lg:translate-x-0">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-10">
+                    <img src="../icon/cice.png" class="w-10 h-10 rounded-xl shadow-lg shadow-orange-200 object-contain">
+                    <span class="text-xl font-black tracking-tight">CICE <span
+                            class="text-orange-500">SYSTEM</span></span>
+                </div>
+
+                <nav class="space-y-2">
+                    <a href="dashboardEvaluator.html"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-th-large"></i> แดชบอร์ด
+                    </a>
+                    <a href="assessor_list.html"
+                        class="sidebar-link active flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all">
+                        <i class="fas fa-clipboard-list"></i> รายชื่อที่ต้องประเมิน
+                    </a>
+                    <a href="graph_evaluation.html"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-chart-pie"></i> สรุปผลภาพรวม
+                    </a>
+                    <div class="pt-6 pb-2">
+                        <span class="px-6 text-xs font-black text-slate-400 uppercase tracking-widest">ระบบ</span>
+                    </div>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                        <i class="fas fa-cog"></i> ตั้งค่าโปรไฟล์
+                    </a>
+                    <a href="#"
+                        class="sidebar-link flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-red-500 hover:bg-red-50 transition-all"
+                        id="logout-btn-sidebar">
+                        <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-72 flex flex-col min-w-0">
+            <!-- Top Header -->
+            <header class="glass-header sticky top-0 z-30 px-6 lg:px-10 py-4 flex items-center justify-between">
+                <button id="menu-toggle" class="lg:hidden text-slate-500 text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="hidden md:block">
+                    <h2 class="text-lg font-bold text-slate-700">ฟอร์มประเมินผล ✍️</h2>
+                    <p class="text-xs text-slate-400">ระบุคะแนนตามเกณฑ์การพิจารณา</p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div id="save-status" class="hidden md:flex items-center text-green-500 text-xs font-bold mr-4">
+                        <i class="fas fa-check-circle mr-2"></i> บันทึกร่างอัตโนมัติแล้ว
+                    </div>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+                        <img src="../icon/user.png" class="w-10 h-10 rounded-full bg-slate-100">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Sticky Progress Indicator -->
+            <div class="evaluation-progress-bar sticky top-[72px] z-20">
+                <div class="flex justify-between items-end mb-2">
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">ความคืบหน้า</span>
+                    <span id="progress-percent" class="text-lg font-black text-orange-500">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Page Content -->
+            <div class="p-6 lg:p-10 space-y-8 max-w-5xl mx-auto w-full">
+
+                <!-- Appraisee Info Profile Card -->
+                <div
+                    class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-[5rem] -z-0 opacity-50"></div>
+
+                    <div class="relative z-10">
+                        <img src="../icon/user.png"
+                            class="w-24 h-24 rounded-[2rem] bg-slate-100 border-4 border-white shadow-lg">
+                        <div
+                            class="absolute -bottom-2 -right-2 bg-green-500 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center text-white text-[10px]">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 text-center md:text-left z-10">
+                        <div
+                            class="inline-block px-3 py-1 bg-orange-100 text-orange-600 rounded-lg text-[10px] font-black uppercase tracking-widest mb-3">
+                            ผู้รับการประเมิน</div>
+                        <h3 class="text-2xl font-black text-slate-800 mb-2">นายสมชาย ใจดี</h3>
+                        <div
+                            class="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-bold text-slate-400">
+                            <span class="flex items-center gap-2"><i class="fas fa-briefcase text-orange-400"></i>
+                                อาจารย์ประจำแผนกวิชาช่างยนต์</span>
+                            <span class="flex items-center gap-2"><i class="fas fa-id-badge text-orange-400"></i>
+                                CICE-001</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-8 flex flex-col gap-4 z-10 min-w-[200px]">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                รอบการประเมิน</p>
+                            <p class="text-sm font-bold text-slate-700">รอบที่ 1 / 2568</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                วันที่ประเมิน</p>
+                            <p id="current-date" class="text-sm font-bold text-slate-700">--/--/----</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evaluation Form -->
+                <form id="evaluationForm" class="space-y-6">
+                    <div class="flex items-center gap-4 py-4">
+                        <div class="h-px bg-slate-100 flex-1"></div>
+                        <h3 class="font-black text-slate-400 uppercase tracking-widest text-xs">เกณฑ์การพิจารณา (Rating
+                            Scale)</h3>
+                        <div class="h-px bg-slate-100 flex-1"></div>
+                    </div>
+
+                    <div id="questions-container" class="space-y-6">
+                        <!-- Questions injected by js/estimate.js -->
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-orange-100 text-orange-500 flex items-center justify-center text-sm">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-700">ข้อเสนอแนะเพิ่มเติม</h4>
+                        </div>
+                        <textarea id="overall-comment" rows="4"
+                            placeholder="ระบุสิ่งที่ควรพัฒนา หรือคำแนะนำเพิ่มเติม..." class="comment-area"></textarea>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row gap-4 pt-8">
+                        <button type="button" onclick="window.location.href='assessor_list.html'"
+                            class="flex-1 px-8 py-4 bg-white border border-slate-200 text-slate-500 rounded-2xl font-bold hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                            ยกเลิกการทำรายการ
+                        </button>
+                        <button type="submit"
+                            class="flex-[2] px-8 py-4 bg-orange-500 text-white rounded-2xl font-black shadow-lg shadow-orange-100 hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-paper-plane"></i> บันทึกและส่งผลการประเมิน
+                        </button>
+                    </div>
+                </form>
+
+                <div class="h-20"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- External JS -->
+    <script src="../js/evaluator/script_evaluator.js"></script>
+    <script src="../js/evaluator/estimate.js"></script>
+</body>
+
+</html>
