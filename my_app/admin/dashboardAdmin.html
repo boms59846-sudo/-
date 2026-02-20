@@ -23,6 +23,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/admin/style_admin.css">
+    <link rel="stylesheet" href="../css/design-system.css">
 
     <script>
         tailwind.config = {
@@ -203,7 +204,7 @@
                 <i class="fas fa-th-large w-5 text-center"></i>
                 <span>แดชบอร์ดรวม</span>
             </a>
-            <a href="#" id="nav-personnel"
+            <a href="personnel_management.html" id="nav-personnel"
                 class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
                 <i class="fas fa-user-friends w-5 text-center"></i>
                 <span>จัดการบุคลากร</span>
@@ -216,11 +217,7 @@
 
             <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mt-8 mb-3 px-4 opacity-60">
                 ระบบการประเมิน</div>
-            <a href="#" id="nav-committee"
-                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
-                <i class="fas fa-user-plus w-5 text-center"></i>
-                <span>เพิ่มบุคลากรรายบุคคล</span>
-            </a>
+
             <a href="#" id="nav-assessment-period"
                 class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
                 <i class="fas fa-calendar-alt w-5 text-center"></i>
@@ -300,7 +297,7 @@
                 </button>
                 <div
                     class="bg-surface border border-border rounded-full px-4 py-2 flex items-center gap-2 text-xs font-bold text-green-600 shadow-sm">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="status-pulse bg-green-500"></span>
                     ระบบปกติ
                 </div>
             </div>
@@ -310,8 +307,86 @@
 
         <!-- 1. Dashboard View -->
         <section id="view-dashboard" class="section-content active">
+            <!-- Summary Metrics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Card 1: Total Assessments -->
+                <div
+                    class="bg-surface p-6 rounded-xl2 shadow-soft border border-border group hover:border-primary/30 transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <span
+                            class="text-[10px] font-bold text-green-500 bg-green-50 px-2 py-1 rounded-lg">+12.5%</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1">การประเมินทั้งหมด
+                    </p>
+                    <h3 class="text-2xl font-black text-text" id="metric-total-assessments">1,280</h3>
+                </div>
+
+                <!-- Card 2: Completed -->
+                <div
+                    class="bg-surface p-6 rounded-xl2 shadow-soft border border-border group hover:border-green-500/30 transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="w-12 h-12 bg-green-500/10 text-green-500 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="flex-1 ml-4 h-1.5 bg-bg rounded-full overflow-hidden">
+                            <div class="bg-green-500 h-full w-[75%]"></div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1">ประเมินเสร็จแล้ว</p>
+                    <div class="flex items-end gap-2">
+                        <h3 class="text-2xl font-black text-text" id="metric-completed-percent">75%</h3>
+                        <span class="text-xs text-text-muted mb-1">(960 ชุด)</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: In Progress -->
+                <div
+                    class="bg-surface p-6 rounded-xl2 shadow-soft border border-border group hover:border-blue-500/30 transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-spinner fa-spin-slow"></i>
+                        </div>
+                        <div class="flex-1 ml-4 h-1.5 bg-bg rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-[15%]"></div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1">
+                        อยู่ระหว่างการประเมิน</p>
+                    <div class="flex items-end gap-2">
+                        <h3 class="text-2xl font-black text-text" id="metric-progress-percent">15%</h3>
+                        <span class="text-xs text-text-muted mb-1">(192 ชุด)</span>
+                    </div>
+                </div>
+
+                <!-- Card 4: Pending -->
+                <div
+                    class="bg-surface p-6 rounded-xl2 shadow-soft border border-border group hover:border-orange-500/30 transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="w-12 h-12 bg-orange-500/10 text-orange-500 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="flex-1 ml-4 h-1.5 bg-bg rounded-full overflow-hidden">
+                            <div class="bg-orange-500 h-full w-[10%]"></div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-1">ยังไม่เริ่มประเมิน
+                    </p>
+                    <div class="flex items-end gap-2">
+                        <h3 class="text-2xl font-black text-text" id="metric-pending-percent">10%</h3>
+                        <span class="text-xs text-text-muted mb-1">(128 ชุด)</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                <!-- Left & Center: Assessment Form -->
+                <!-- Left & Center: Charts & Form -->
                 <div class="xl:col-span-2 space-y-8">
                     <div class="bg-surface rounded-xl2 shadow-soft border border-border overflow-hidden">
                         <div class="bg-primary/5 p-6 border-b border-border flex items-center justify-between">
@@ -417,65 +492,27 @@
                         </form>
                     </div>
 
-                    <!-- Monitoring Overview -->
-                    <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                            <div>
-                                <h3 class="text-lg font-bold">สถานะความคืบหน้าการตอบกลับ</h3>
-                                <p class="text-xs text-text-muted">ข้อมูลอัปเดตล่าสุด: <span
-                                        class="font-bold text-primary">Live</span></p>
+                    <!-- Monitoring Overview (Enhanced Charts) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Chart 1: Assessment Progress Bar Chart -->
+                        <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-bold">ความคืบหน้ารายฝ่าย</h3>
+                                <p class="text-xs text-text-muted">เปรียบเทียบการตอบกลับแบ่งตามฝ่ายงาน</p>
                             </div>
-                            <div class="flex items-center gap-2 bg-bg p-2 rounded-lg">
-                                <span
-                                    class="text-[10px] font-bold text-text-muted uppercase px-2 border-r border-border">เกณฑ์คะแนน:</span>
-                                <div class="flex items-center gap-3 px-2">
-                                    <span class="flex items-center gap-1 text-[9px] font-bold"><span
-                                            class="rating-indicator bg-green-500"></span> 5-ดีเยี่ยม</span>
-                                    <span class="flex items-center gap-1 text-[9px] font-bold"><span
-                                            class="rating-indicator bg-blue-500"></span> 4-ดีมาก</span>
-                                    <span class="flex items-center gap-1 text-[9px] font-bold"><span
-                                            class="rating-indicator bg-red-500"></span> 1-ปรับปรุง</span>
-                                </div>
+                            <div class="h-64">
+                                <canvas id="deptProgressChart"></canvas>
                             </div>
                         </div>
 
-                        <div class="space-y-8">
-                            <!-- Progress Row -->
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-end">
-                                    <div>
-                                        <span class="text-sm font-bold block">พนักงานทั่วไป (Staff)</span>
-                                        <span class="text-[10px] text-text-muted">ส่งไปทั้งหมด 500 รายการ</span>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-xl font-bold text-primary">82%</span>
-                                        <span class="text-[10px] text-text-muted block">410 / 500 คน</span>
-                                    </div>
-                                </div>
-                                <div class="w-full h-3 bg-bg rounded-full overflow-hidden shadow-inner">
-                                    <div
-                                        class="bg-gradient-to-r from-primary to-orange-400 h-full w-[82%] rounded-full relative">
-                                        <div class="absolute inset-0 bg-surface/20 animate-pulse"></div>
-                                    </div>
-                                </div>
+                        <!-- Chart 2: Personnel Type Distribution -->
+                        <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-bold">สัดส่วนบุคลากร</h3>
+                                <p class="text-xs text-text-muted">แบ่งตามประเภทสิทธิ์การใช้งาน</p>
                             </div>
-
-                            <!-- Progress Row -->
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-end">
-                                    <div>
-                                        <span class="text-sm font-bold block">หัวหน้างาน (Manager)</span>
-                                        <span class="text-[10px] text-text-muted">ส่งไปทั้งหมด 45 รายการ</span>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-xl font-bold text-blue-500">45%</span>
-                                        <span class="text-[10px] text-text-muted block">20 / 45 คน</span>
-                                    </div>
-                                </div>
-                                <div class="w-full h-3 bg-bg rounded-full overflow-hidden shadow-inner">
-                                    <div class="bg-gradient-to-r from-blue-500 to-blue-400 h-full w-[45%] rounded-full">
-                                    </div>
-                                </div>
+                            <div class="h-64">
+                                <canvas id="personnelDistChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -535,121 +572,7 @@
             </div>
         </section>
 
-        <!-- 2. View Personnel -->
-        <section id="view-personnel" class="section-content">
-            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
-                    <div>
-                        <h2 class="text-xl font-bold">จัดการข้อมูลบุคลากร</h2>
-                        <p class="text-sm text-text-muted">ตรวจสอบ แก้ไข และจัดการสิทธิ์การเข้าใช้งาน</p>
-                    </div>
-                    <div class="flex gap-3">
-                        <button id="add-user-btn"
-                            class="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all flex items-center gap-2">
-                            <i class="fas fa-plus"></i> เพิ่มบุคลากร
-                        </button>
-                    </div>
-                </div>
 
-                <div class="mb-6 relative">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-text-muted"></i>
-                    <input type="text" id="user-search" placeholder="ค้นหาชื่อ, รหัส, หรือบทบาท..."
-                        class="w-full pl-12 pr-4 py-3 bg-bg border border-border rounded-xl outline-none focus:ring-2 focus:ring-primary/20">
-                </div>
-
-                <div class="overflow-x-auto rounded-xl border border-border">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>รหัส</th>
-                                <th>ชื่อ - นามสกุล</th>
-                                <th>แผนก / ตำแหน่ง</th>
-                                <th>บทบาท</th>
-                                <th>สถานะ</th>
-                                <th style="text-align: center;">จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="user-list-tbody">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Add Personnel View -->
-        <section id="view-add-personnel" class="section-content">
-            <div class="bg-surface p-8 rounded-xl2 shadow-soft border border-border">
-                <div class="mb-8">
-                    <h2 class="text-xl font-bold">เพิ่มบุคลากรใหม่</h2>
-                    <p class="text-sm text-text-muted">ลงทะเบียนบุคลากรใหม่เข้าสู่ระบบประเมิน</p>
-                </div>
-
-                <form id="add-personnel-form" class="space-y-8">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-4">
-                            <h4 class="text-xs font-bold text-primary uppercase tracking-widest">ข้อมูลส่วนตัว</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">ชื่อจริง
-                                        <span class="text-red-500">*</span></label>
-                                    <input type="text" id="new-fname" required class="form-control">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">นามสกุล
-                                        <span class="text-red-500">*</span></label>
-                                    <input type="text" id="new-lname" required class="form-control">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">อีเมล
-                                        <span class="text-red-500">*</span></label>
-                                    <input type="email" id="new-email" required class="form-control">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4">
-                            <h4 class="text-xs font-bold text-primary uppercase tracking-widest">ข้อมูลการทำงาน</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <label
-                                        class="block text-[10px] font-bold text-text-muted uppercase mb-1">รหัสพนักงาน
-                                        <span class="text-red-500">*</span></label>
-                                    <input type="text" id="new-id" required class="form-control">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-text-muted uppercase mb-1">แผนก /
-                                        ฝ่าย <span class="text-red-500">*</span></label>
-                                    <select id="new-dept" required class="form-control">
-                                        <option value="">-- เลือกแผนก --</option>
-                                        <option value="academic">ฝ่ายวิชาการ</option>
-                                        <option value="admin">ฝ่ายธุรการ</option>
-                                        <option value="personnel">ฝ่ายบุคคล</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-[10px] font-bold text-text-muted uppercase mb-1">สิทธิ์การใช้งาน
-                                        <span class="text-red-500">*</span></label>
-                                    <select id="new-role" required class="form-control">
-                                        <option value="appraisee">Appraisee</option>
-                                        <option value="assessor">Assessor</option>
-                                        <option value="admin">Admin</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-6 border-t border-border flex justify-end gap-4">
-                        <button type="reset"
-                            class="px-8 py-3 bg-bg text-text-muted font-bold rounded-xl text-sm transition-all hover:bg-gray-200">ล้างข้อมูล</button>
-                        <button type="submit"
-                            class="px-10 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-orange-100 text-sm transition-all hover:bg-orange-600">บันทึกพนักงาน</button>
-                    </div>
-                </form>
-            </div>
-        </section>
 
         <!-- 4. Assessment Period View -->
         <section id="view-assessment-period" class="section-content">
@@ -670,8 +593,10 @@
                         <thead>
                             <tr>
                                 <th>ชื่อรอบการประเมิน</th>
+                                <th>ประเภท</th>
                                 <th>วันเริ่มต้น</th>
                                 <th>วันสิ้นสุด</th>
+                                <th>ผู้ประเมิน</th>
                                 <th>สถานะ</th>
                                 <th>จัดการ</th>
                             </tr>
@@ -679,17 +604,43 @@
                         <tbody>
                             <tr>
                                 <td><strong>รอบที่ 1/2568 (Q1)</strong></td>
+                                <td><span
+                                        class="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase">Annual</span>
+                                </td>
                                 <td>01/10/2567</td>
                                 <td>31/12/2567</td>
+                                <td><span class="text-xs font-bold">แอดมินใจดี</span></td>
                                 <td><span class="status-badge status-completed">เสร็จสิ้น</span></td>
-                                <td><button class="text-primary hover:underline font-bold">ดูรายละเอียด</button></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button
+                                            class="w-8 h-8 rounded-lg bg-bg text-text-muted hover:text-primary transition-all"><i
+                                                class="fas fa-eye"></i></button>
+                                        <button
+                                            class="w-8 h-8 rounded-lg bg-bg text-text-muted hover:text-primary transition-all"><i
+                                                class="fas fa-print"></i></button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>รอบที่ 2/2568 (Q2)</strong></td>
+                                <td><span
+                                        class="px-2 py-1 bg-purple-50 text-purple-600 rounded-lg text-[10px] font-bold uppercase">Mid-Year</span>
+                                </td>
                                 <td>01/01/2568</td>
                                 <td>31/03/2568</td>
+                                <td><span class="text-xs font-bold">สมชาย ผู้ประเมิน</span></td>
                                 <td><span class="status-badge bg-orange-100 text-orange-600">กำลังดำเนินการ</span></td>
-                                <td><button class="text-primary hover:underline font-bold">แก้ไข</button></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button
+                                            class="w-8 h-8 rounded-lg bg-bg text-text-muted hover:text-primary transition-all"><i
+                                                class="fas fa-edit"></i></button>
+                                        <button
+                                            class="w-8 h-8 rounded-lg bg-bg text-text-muted hover:text-red-500 transition-all"><i
+                                                class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -1359,6 +1310,119 @@
             });
         }
     </script>
-</body>
 
+    <!-- Assessment Modals -->
+
+    <!-- Add Period Modal -->
+    <div id="add-period-modal" class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-surface w-full max-w-xl rounded-xl2 shadow-xl border border-border overflow-hidden animate-slideUp">
+            <div class="p-6 border-b border-border flex items-center justify-between bg-primary/5">
+                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <i class="fas fa-calendar-plus text-primary"></i> เพิ่มรอบการประเมินใหม่
+                </h3>
+                <button class="close-modal-btn text-text-muted hover:text-red-500 transition-all">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="add-period-form" class="p-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">ชื่อรอบการประเมิน</label>
+                        <input type="text" id="period-name" placeholder="เช่น รอบที่ 1/2568 (Q1)" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">วันเริ่มต้น</label>
+                        <input type="date" id="period-start" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">วันสิ้นสุด</label>
+                        <input type="date" id="period-end" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">ประเภทการประเมิน</label>
+                        <select id="period-type" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20">
+                            <option value="annual">ประจำปี (Annual)</option>
+                            <option value="midyear">กลางปี (Mid-Year)</option>
+                            <option value="custom">อื่นๆ (Custom)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-text-muted uppercase mb-2">ผู้ประเมินหลัก (Assessor)</label>
+                        <input type="text" id="period-assessor" placeholder="ชื่อผู้ประเมิน" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20" required>
+                    </div>
+                </div>
+                <div class="pt-6 border-t border-border flex justify-end gap-3">
+                    <button type="button" class="close-modal-btn px-6 py-2.5 bg-bg text-text-muted font-bold rounded-xl hover:bg-gray-200 transition-all text-sm">ยกเลิก</button>
+                    <button type="submit" class="px-8 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all text-sm">
+                        บันทึกข้อมูล
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Department Modal -->
+    <div id="add-dept-modal" class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-surface w-full max-w-lg rounded-xl2 shadow-xl border border-border overflow-hidden animate-slideUp">
+            <div class="p-6 border-b border-border flex items-center justify-between bg-blue-500/5 text-blue-600">
+                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <i class="fas fa-building"></i> เพิ่มแผนกใหม่
+                </h3>
+                <button class="close-modal-btn text-text-muted hover:text-red-500 transition-all">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="add-dept-form" class="p-8 space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-text-muted uppercase mb-2">ชื่อแผนก</label>
+                    <input type="text" placeholder="ระบุชื่อแผนก" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/20" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-text-muted uppercase mb-2">หัวหน้าแผนก</label>
+                    <input type="text" placeholder="ชื่อ-นามสกุล หัวหน้าแผนก" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/20" required>
+                </div>
+                <div class="pt-6 border-t border-border flex justify-end gap-3">
+                    <button type="button" class="close-modal-btn px-6 py-2.5 bg-bg text-text-muted font-bold rounded-xl hover:bg-gray-200 transition-all text-sm">ยกเลิก</button>
+                    <button type="submit" class="px-8 py-2.5 bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-100 hover:bg-blue-600 transition-all text-sm">
+                        บันทึกข้อมูล
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Line Modal -->
+    <div id="add-line-modal" class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-surface w-full max-w-lg rounded-xl2 shadow-xl border border-border overflow-hidden animate-slideUp">
+            <div class="p-6 border-b border-border flex items-center justify-between bg-primary/5 text-primary">
+                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <i class="fas fa-project-diagram"></i> เพิ่มสายการประเมินใหม่
+                </h3>
+                <button class="close-modal-btn text-text-muted hover:text-red-500 transition-all">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="add-line-form" class="p-8 space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-text-muted uppercase mb-2">ชื่อสายการประเมิน</label>
+                    <input type="text" placeholder="เช่น สายวิชาการ - อาจารย์ระดับ 1" class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-text-muted uppercase mb-2">ประเภทความสัมพันธ์</label>
+                    <select class="w-full bg-bg border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20">
+                        <option value="direct">ผู้บังคับบัญชาโดยตรง (Direct Manager)</option>
+                        <option value="peer">เพื่อนร่วมงาน (Peer)</option>
+                        <option value="self">ประเมินตนเอง (Self)</option>
+                    </select>
+                </div>
+                <div class="pt-6 border-t border-border flex justify-end gap-3">
+                    <button type="button" class="close-modal-btn px-6 py-2.5 bg-bg text-text-muted font-bold rounded-xl hover:bg-gray-200 transition-all text-sm">ยกเลิก</button>
+                    <button type="submit" class="px-8 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-orange-100 hover:bg-orange-600 transition-all text-sm">
+                        บันทึกข้อมูล
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
 </html>

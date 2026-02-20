@@ -144,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 5. ระบบสลับหน้า (View Switcher) - อัปเดต ---
     // Navigation Links (Menu) - เพิ่มเมนูใหม่
     const navDashboard = document.getElementById('nav-dashboard');
-    const navPersonnel = document.getElementById('nav-personnel');
     const navAssessment = document.getElementById('nav-assessment');
     const navAssessmentPeriod = document.getElementById('nav-assessment-period');
     const navAssessmentLine = document.getElementById('nav-assessment-line');
@@ -152,12 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const navReportSummary = document.getElementById('nav-report-summary');
     const navReportStatistics = document.getElementById('nav-report-statistics');
     const navCommandCenter = document.getElementById('nav-command-center');
-    // [ดิิม] เมนูเพิ่มบุคลากร
-    const navCommittee = document.getElementById('nav-committee');
+
 
     // Content Views (Section) - เพิ่มหน้าใหม่
     const viewDashboard = document.getElementById('view-dashboard');
-    const viewPersonnel = document.getElementById('view-personnel');
     const viewAssessment = document.getElementById('view-assessment');
     const viewAssessmentPeriod = document.getElementById('view-assessment-period');
     const viewAssessmentLine = document.getElementById('view-assessment-line');
@@ -165,16 +162,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewReportSummary = document.getElementById('view-report-summary');
     const viewReportStatistics = document.getElementById('view-report-statistics');
     const viewCommandCenter = document.getElementById('view-command-center');
-    // [ใหม่] หน้าเพิ่มบุคลากร
-    const viewAddPersonnel = document.getElementById('view-add-personnel');
+
     // [ใหม่ล่าสุด] หน้าโปรไฟล์
     const viewProfile = document.getElementById('view-profile');
     const navProfileShortcut = document.getElementById('nav-profile-shortcut');
 
     window.switchView = function (viewName) {
         // ซ่อนทุกหน้า
-        const allViews = [viewDashboard, viewPersonnel, viewAssessment, viewAssessmentPeriod,
-            viewAssessmentLine, viewOrganization, viewReportSummary, viewReportStatistics, viewAddPersonnel, viewProfile, viewCommandCenter];
+        const allViews = [viewDashboard, viewAssessment, viewAssessmentPeriod,
+            viewAssessmentLine, viewOrganization, viewReportSummary, viewReportStatistics, viewProfile, viewCommandCenter];
         allViews.forEach(view => {
             if (view) {
                 view.classList.remove('active');
@@ -183,8 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // ลบ active class และสไตล์เดิมจากทุกเมนู
-        const allNavs = [navDashboard, navPersonnel, navAssessment, navAssessmentPeriod,
-            navAssessmentLine, navOrganization, navReportSummary, navReportStatistics, navCommittee, navCommandCenter];
+        const allNavs = [navDashboard, navAssessment, navAssessmentPeriod,
+            navAssessmentLine, navOrganization, navReportSummary, navReportStatistics, navCommandCenter];
 
         allNavs.forEach(nav => {
             if (nav) {
@@ -198,8 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let targetNav = null;
 
         switch (viewName) {
-            case 'dashboard': targetView = viewDashboard; targetNav = navDashboard; break;
-            case 'personnel': targetView = viewPersonnel; targetNav = navPersonnel; if (typeof renderPersonnelTable === 'function') renderPersonnelTable(); break;
+            case 'dashboard':
+                targetView = viewDashboard;
+                targetNav = navDashboard;
+                setTimeout(initDashboardCharts, 50);
+                break;
+
             case 'assessment': targetView = viewAssessment; targetNav = navAssessment; break;
             case 'assessment-period': targetView = viewAssessmentPeriod; targetNav = navAssessmentPeriod; break;
             case 'assessment-line': targetView = viewAssessmentLine; targetNav = navAssessmentLine; break;
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetNav = navReportStatistics;
                 setTimeout(initAdminCharts, 50); // Small delay to ensure display is block
                 break;
-            case 'add-personnel': targetView = viewAddPersonnel; targetNav = navCommittee; break;
+
             case 'command-center': targetView = viewCommandCenter; targetNav = navCommandCenter; break;
             case 'profile': targetView = viewProfile; targetNav = null; break;
         }
@@ -228,14 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event Listeners สำหรับเมนูทั้งหมด
     if (navDashboard) navDashboard.addEventListener('click', (e) => { e.preventDefault(); switchView('dashboard'); });
-    if (navPersonnel) navPersonnel.addEventListener('click', (e) => { e.preventDefault(); switchView('personnel'); });
+
     if (navAssessment) navAssessment.addEventListener('click', (e) => { e.preventDefault(); switchView('assessment'); });
     if (navAssessmentPeriod) navAssessmentPeriod.addEventListener('click', (e) => { e.preventDefault(); switchView('assessment-period'); });
     if (navAssessmentLine) navAssessmentLine.addEventListener('click', (e) => { e.preventDefault(); switchView('assessment-line'); });
     if (navOrganization) navOrganization.addEventListener('click', (e) => { e.preventDefault(); switchView('organization'); });
     if (navReportSummary) navReportSummary.addEventListener('click', (e) => { e.preventDefault(); switchView('report-summary'); });
     if (navReportStatistics) navReportStatistics.addEventListener('click', (e) => { e.preventDefault(); switchView('report-statistics'); });
-    if (navCommittee) navCommittee.addEventListener('click', (e) => { e.preventDefault(); switchView('add-personnel'); });
+
     if (navCommandCenter) navCommandCenter.addEventListener('click', (e) => { e.preventDefault(); switchView('command-center'); });
 
     // คลิกที่โปรไฟล์มุมล่างซ้าย
@@ -389,123 +389,111 @@ document.addEventListener('DOMContentLoaded', () => {
     handleFormSubmit('add-line-form', 'เพิ่มสายการประเมินเรียบร้อยแล้ว');
 
     // --- 8. สร้างกราฟ Chart.js ---
-    const progressCtx = document.getElementById('progressChart');
-    if (progressCtx) {
-        new Chart(progressCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['ประเมินเสร็จสิ้น', 'รอดำเนินการ', 'บุคลากรที่ยังไม่ได้เข้าสู่ระบบ', 'อาจารย์ที่เข้าสู่ระบบเสร็จสิ้น', 'บุคลากรที่รอดำเนินการ', 'นักเรียนที่ยังไม่ได้รับการยืนยัน'],
-                datasets: [{
-                    label: 'สถานะการประเมิน',
-                    data: [1000, 500, 700, 1500, 300, 100],
-                    backgroundColor: ['#28a745', '#ffc107', '#ff9f00', '#1e90ff', '#333333', '#ff0028'],
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: body.classList.contains('dark-mode') ? '#fff' : '#666' } }
+    function initDashboardCharts() {
+        // --- 1. Department Progress Bar Chart ---
+        const deptCtx = document.getElementById('deptProgressChart');
+        if (deptCtx) {
+            const existingDept = Chart.getChart('deptProgressChart');
+            if (existingDept) existingDept.destroy();
+
+            new Chart(deptCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['ฝ่ายวิชาการ', 'ฝ่ายธุรการ', 'ฝ่ายบริหาร', 'ฝ่ายบุคคล', 'ฝ่ายการเงิน'],
+                    datasets: [{
+                        label: 'ความคืบหน้า (%)',
+                        data: [85, 72, 95, 60, 80],
+                        backgroundColor: [
+                            'rgba(255, 109, 31, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(168, 85, 247, 0.7)',
+                            'rgba(245, 158, 11, 0.7)'
+                        ],
+                        borderRadius: 8,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, max: 100, grid: { display: false } },
+                        y: { grid: { display: false } }
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        // --- 2. Personnel Type Distribution Chart ---
+        const personnelDistCtx = document.getElementById('personnelDistChart');
+        if (personnelDistCtx) {
+            const existingDist = Chart.getChart('personnelDistChart');
+            if (existingDist) existingDist.destroy();
+
+            new Chart(personnelDistCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['พนักงานทั่วไป', 'หัวหน้างาน', 'ผู้บริหาร', 'อื่นๆ'],
+                    datasets: [{
+                        data: [500, 45, 15, 20],
+                        backgroundColor: [
+                            'rgba(255, 109, 31, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(156, 163, 175, 0.8)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: body.classList.contains('dark') ? '#1e293b' : '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                    }
+                }
+            });
+        }
+
+        // --- 3. System Status Doughnut (Existing Improved) ---
+        const progressCtx = document.getElementById('progressChart');
+        if (progressCtx) {
+            const existingProgress = Chart.getChart('progressChart');
+            if (existingProgress) existingProgress.destroy();
+
+            new Chart(progressCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Online', 'Idle', 'Offline'],
+                    datasets: [{
+                        data: [120, 45, 15],
+                        backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
     }
 
-    // --- 9. MOCK DATA & PERSONNEL TABLE LOGIC ---
-    let mockPersonnel = [
-        { id: 'U1001', name: 'สมชาย ใจดี', dept: 'ฝ่ายวิชาการ / อาจารย์', role: 'assessor', status: 'active' },
-        { id: 'U1002', name: 'สมหญิง รักเรียน', dept: 'ฝ่ายธุรการ / เจ้าหน้าที่', role: 'appraisee', status: 'active' },
-        { id: 'U1003', name: 'วิชัย เก่งกาจ', dept: 'ฝ่ายบริหาร / หัวหน้าฝ่าย', role: 'admin', status: 'active' },
-        { id: 'U1004', name: 'มานี มีตา', dept: 'ฝ่ายวิชาการ / อาจารย์', role: 'appraisee', status: 'inactive' },
-        { id: 'U1005', name: 'ปิติ พอใจ', dept: 'ฝ่ายบุคคล / เจ้าหน้าที่', role: 'assessor', status: 'active' }
-    ];
-
-    function renderPersonnelTable() {
-        const tbody = document.getElementById('user-list-tbody');
-        if (!tbody) return;
-        tbody.innerHTML = ''; // Clear existing rows
-
-        mockPersonnel.forEach(user => {
-            const tr = document.createElement('tr');
-            tr.setAttribute('data-user-id', user.id);
-
-            const statusClass = user.status === 'active' ? 'status-active' : 'status-inactive';
-            const statusText = user.status === 'active' ? 'Active' : 'Inactive';
-
-            tr.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.dept}</td>
-                <td>
-                    <select class="user-role-select" data-user-id="${user.id}">
-                        <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
-                        <option value="assessor" ${user.role === 'assessor' ? 'selected' : ''}>Assessor</option>
-                        <option value="appraisee" ${user.role === 'appraisee' ? 'selected' : ''}>Appraisee</option>
-                    </select>
-                </td>
-                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                <td>
-                    <button class="btn-sm btn-edit"><i class="fas fa-edit"></i></button>
-                    <button class="btn-sm btn-delete"><i class="fas fa-trash-alt"></i></button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+    // Initialize Dashboard Charts
+    if (viewDashboard && viewDashboard.classList.contains('active')) {
+        setTimeout(initDashboardCharts, 100);
     }
 
-    // Add User Button Logic (Redirect to Form)
-    const addUserBtn = document.getElementById('add-user-btn');
-    if (addUserBtn) {
-        addUserBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            switchView('add-personnel');
-        });
-    }
 
-    // --- 10. [ใหม่] Logic สำหรับฟอร์มเพิ่มบุคลากร ---
-    const addPersonnelForm = document.getElementById('add-personnel-form');
-    if (addPersonnelForm) {
-        addPersonnelForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // จำลองการดึงค่า
-            const name = document.getElementById('new-fname').value + ' ' + document.getElementById('new-lname').value;
-            const dept = document.getElementById('new-dept').options[document.getElementById('new-dept').selectedIndex].text;
-            const role = document.getElementById('new-role').value;
-            const id = document.getElementById('new-id').value;
-
-            // แสดง Loading จำลอง
-            const btn = this.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                alert(`บันทึกข้อมูลสำเร็จ!\n\nเพิ่มคุณ "${name}"\nรหัส: ${id}\nแผนก: ${dept}`);
-
-                // เพิ่มลงในตารางจำลอง (ถ้าหน้ารายชื่อโหลดอยู่)
-                const newUser = {
-                    id: id,
-                    name: name,
-                    dept: dept,
-                    role: role,
-                    status: 'active'
-                };
-                mockPersonnel.push(newUser);
-                renderPersonnelTable();
-
-                // รีเซ็ตฟอร์มและปุ่ม
-                addPersonnelForm.reset();
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-
-                // กลับไปหน้ารายชื่อ
-                switchView('personnel');
-
-            }, 1000);
-        });
-    }
 
     // --- 11. [ใหม่] สร้างกราฟในหน้า "ผลการประเมิน" สำหรับ Admin ---
     function initAdminCharts() {
@@ -595,6 +583,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } // Closes initAdminCharts function
 
+    // --- 9. ยกระดับ Recent Activities ---
+    const activityList = document.getElementById('activity-list');
+    if (activityList) {
+        const activities = [
+            { icon: 'fa-check', color: 'green', text: 'สมชาย ใจดี ส่งแบบประเมินแล้ว', time: '5 นาทีที่แล้ว', status: 'Success' },
+            { icon: 'fa-user-plus', color: 'blue', text: 'เพิ่มบุคลากรใหม่ 3 รายเข้าแผนกธุรการ', time: '12 นาทีที่แล้ว', status: 'Info' },
+            { icon: 'fa-exclamation-triangle', color: 'orange', text: 'ฝ่ายการเงินตอบกลับต่ำกว่าเกณฑ์ (40%)', time: '25 นาทีที่แล้ว', status: 'Warning' },
+            { icon: 'fa-file-export', color: 'purple', text: 'Admin ส่งออกรายงานสรุป Q1', time: '1 ชั่วโมงที่แล้ว', status: 'Export' }
+        ];
+
+        activityList.innerHTML = activities.map(act => `
+            <div class="flex gap-4 p-4 bg-bg rounded-xl border border-transparent hover:border-gray-200 transition-all">
+                <div class="w-10 h-10 bg-${act.color}-500/10 text-${act.color}-500 rounded-xl flex items-center justify-center shrink-0">
+                    <i class="fas ${act.icon} text-sm"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-1">
+                        <p class="text-[11px] font-bold text-text">${act.text}</p>
+                        <span class="text-[9px] font-bold text-${act.color}-500 bg-${act.color}-500/5 px-2 py-0.5 rounded-full">${act.status}</span>
+                    </div>
+                    <p class="text-[10px] text-text-muted"><i class="far fa-clock mr-1"></i> ${act.time}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
     // --- 11. ฟังก์ชันช่วยเหลืออื่นๆ ---
     const now = new Date();
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -654,4 +668,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- 12. Handle Query Parameters for View Switching ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get('view');
+    if (view && typeof switchView === 'function') {
+        switchView(view);
+    }
 }); // Closes the DOMContentLoaded event listener
+

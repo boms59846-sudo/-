@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการบุคลากร - CICE Admin</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Base Design System -->
+    <link rel="stylesheet" href="../css/design-system.css">
+
+    <!-- Personnel Management Specific CSS -->
+    <link rel="stylesheet" href="../css/personnel-management.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6D1F',
+                        'primary-light': 'rgba(255, 109, 31, 0.1)',
+                        bg: '#f8fafc',
+                        surface: '#ffffff',
+                        text: '#1a1a1a',
+                        'text-muted': '#64748b',
+                        border: '#e2e8f0'
+                    },
+                    fontFamily: { sans: ['Prompt', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-bg text-text min-h-screen flex selection:bg-primary selection:text-white">
+
+    <!-- Sidebar -->
+    <aside
+        class="fixed inset-y-0 left-0 w-72 bg-surface border-r border-border z-50 transform -translate-x-full lg:translate-x-0 glass-panel overflow-y-auto"
+        id="sidebar">
+        <div class="p-8 flex items-center gap-3">
+            <img src="../icon/cice.png" class="w-10 h-10 object-contain" alt="Logo">
+            <span class="text-xl font-bold tracking-tight text-text">CICE <span
+                    class="text-primary">dashboard</span></span>
+        </div>
+
+        <nav class="px-6 space-y-1 mb-24">
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mb-3 px-4 opacity-60">เมนูหลัก
+            </div>
+            <a href="dashboardAdmin.html" id="nav-dashboard"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-th-large w-5 text-center"></i>
+                <span>แดชบอร์ดรวม</span>
+            </a>
+            <a href="personnel_management.html" id="nav-personnel"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-primary bg-primary-light rounded-2xl font-medium active">
+                <i class="fas fa-user-friends w-5 text-center"></i>
+                <span>จัดการบุคลากร</span>
+            </a>
+            <a href="dashboardAdmin.html?view=organization" id="nav-organization"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-sitemap w-5 text-center"></i>
+                <span>ผังองค์กร</span>
+            </a>
+
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mt-8 mb-3 px-4 opacity-60">
+                ระบบการประเมิน</div>
+
+            <a href="dashboardAdmin.html?view=assessment-period" id="nav-assessment-period"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-calendar-alt w-5 text-center"></i>
+                <span>รอบการประเมิน</span>
+            </a>
+            <a href="dashboardAdmin.html?view=assessment-line" id="nav-assessment-line"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-project-diagram w-5 text-center"></i>
+                <span>สายการประเมิน</span>
+            </a>
+
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mt-8 mb-3 px-4 opacity-60">
+                ศูนย์บัญชาการ</div>
+            <a href="dashboardAdmin.html?view=command-center" id="nav-command-center"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-shield-alt w-5 text-center"></i>
+                <span>Command Center</span>
+            </a>
+
+            <div class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em] mt-8 mb-3 px-4 opacity-60">
+                รายงานและสถิติ</div>
+            <a href="dashboardAdmin.html?view=report-summary" id="nav-report-summary"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-poll w-5 text-center"></i>
+                <span>สรุปผลการประเมิน</span>
+            </a>
+            <a href="dashboardAdmin.html?view=report-statistics" id="nav-report-statistics"
+                class="nav-link flex items-center gap-4 px-4 py-3 text-text-muted hover:text-primary hover:bg-bg rounded-2xl transition-all font-medium">
+                <i class="fas fa-chart-bar w-5 text-center"></i>
+                <span>ตารางผลคะแนน</span>
+            </a>
+        </nav>
+
+        <!-- Current User Info (Sidebar Bottom) -->
+        <div class="absolute bottom-8 left-6 right-6 space-y-2">
+            <div id="nav-profile-shortcut"
+                class="p-4 bg-bg rounded-2xl flex items-center gap-3 hover:bg-primary/5 cursor-pointer transition-all border border-transparent hover:border-primary/10 group">
+                <img src="../icon/user.png"
+                    class="w-10 h-10 rounded-full border-2 border-surface shadow-sm group-hover:scale-105 transition-transform">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-text truncate username">Administrator</p>
+                    <p class="text-[10px] text-text-muted uppercase font-bold tracking-tighter">ตั้งค่าโปรไฟล์</p>
+                </div>
+                <button class="text-text-muted hover:text-primary transition-colors">
+                    <i class="fas fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+            <button id="logout-btn-sidebar"
+                class="w-full flex items-center justify-center gap-2 p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all font-bold text-xs">
+                <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content wrapper -->
+    <main class="lg:ml-72 flex-1 p-6 lg:p-10 transition-all duration-300">
+
+        <!-- Header area -->
+        <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
+            <div class="flex items-center gap-4">
+                <button id="menu-toggle" class="lg:hidden text-text-muted text-xl p-2 hover:bg-bg rounded-lg"
+                    onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-text">จัดการบุคลากร</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="dark-mode-toggle-btn"
+                    class="w-10 h-10 bg-surface border border-border rounded-xl flex items-center justify-center text-text-muted hover:text-primary transition-all shadow-sm">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="logout-btn"
+                    class="w-10 h-10 bg-surface border border-border rounded-xl flex items-center justify-center text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all shadow-sm"
+                    title="ออกจากระบบ">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Personnel Management Content -->
+        <div class="personnel-container">
+            <!-- Header -->
+            <div class="personnel-header">
+                <div class="header-content">
+                    <div class="header-title">
+                        <h1>บุคลากรทั้งหมด</h1>
+                        <p>จัดการข้อมูล แก้ไข และกำหนดสิทธิ์การใช้งานของบุคลากรในระบบ</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline" id="export-btn">
+                            <i class="fas fa-file-export"></i>
+                            Export CSV
+                        </button>
+                        <button class="btn btn-primary" id="add-personnel-btn">
+                            <i class="fas fa-plus"></i>
+                            เพิ่มบุคลากร
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="personnel-stats">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">บุคลากรทั้งหมด</div>
+                        <div class="stat-value" id="stat-total">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon active">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">กำลังใช้งาน</div>
+                        <div class="stat-value" id="stat-active">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon inactive">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">ปิดใช้งาน</div>
+                        <div class="stat-value" id="stat-inactive">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon admin">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">Admin</div>
+                        <div class="stat-value" id="stat-admin">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="personnel-filters">
+                <div class="filter-group">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="ค้นหาด้วยชื่อ, อีเมล หรือรหัสพนักงาน...">
+                    </div>
+                    <select id="filter-dept" class="filter-select">
+                        <option value="">ทุกแผนก</option>
+                        <option value="academic">ฝ่ายวิชาการ</option>
+                        <option value="personnel">ฝ่ายบุคคล</option>
+                        <option value="admin">ฝ่ายธุรการ</option>
+                    </select>
+                    <select id="filter-role" class="filter-select">
+                        <option value="">ทุกสิทธิ์</option>
+                        <option value="admin">Admin</option>
+                        <option value="assessor">Assessor</option>
+                        <option value="appraisee">Appraisee</option>
+                    </select>
+                    <select id="filter-status" class="filter-select">
+                        <option value="">ทุกสถานะ</option>
+                        <option value="active">ใช้งาน</option>
+                        <option value="inactive">ปิดใช้งาน</option>
+                    </select>
+                    <button class="btn btn-outline btn-sm" id="reset-filter-btn">
+                        <i class="fas fa-undo"></i> รีเซ็ต
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="personnel-table-section">
+                <div class="table-wrapper">
+                    <table class="personnel-table">
+                        <thead>
+                            <tr>
+                                <th class="col-avatar">รูป</th>
+                                <th class="col-name">ชื่อ-นามสกุล / อีเมล</th>
+                                <th class="col-id">รหัสพนักงาน</th>
+                                <th class="col-dept">แผนก/ฝ่าย</th>
+                                <th class="col-position">ตำแหน่ง</th>
+                                <th class="col-role">สิทธิ์การใช้งาน</th>
+                                <th class="col-status">สถานะ</th>
+                                <th class="col-actions">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="personnel-tbody">
+                            <!-- Data will be loaded here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state hidden">
+                    <div class="empty-icon">
+                        <i class="fas fa-user-times"></i>
+                    </div>
+                    <h3>ไม่พบข้อมูลบุคลากร</h3>
+                    <p>ลองปรับเปลี่ยนเงื่อนไขการค้นหาหรือเพิ่มบุคลากรใหม่</p>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="personnel-pagination">
+                <div class="pagination-info">
+                    <p>แสดง <span id="showing-count">0</span> จาก <span id="total-count">0</span> รายการ</p>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn-pagination" id="prev-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="pagination-page">หน้า <span id="page-info">1</span></div>
+                    <button class="btn-pagination" id="next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personnel Modal -->
+        <div id="personnel-modal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">เพิ่มบุคลากรใหม่</h2>
+                    <button class="modal-close" id="close-modal">&times;</button>
+                </div>
+                <form id="personnel-form" class="modal-form">
+                    <input type="hidden" id="form-personnel-id">
+
+                    <div class="form-section">
+                        <h3 class="section-title">ข้อมูลส่วนตัว</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ชื่อจริง <span class="required">*</span></label>
+                                <input type="text" id="form-fname" class="form-input" required
+                                    placeholder="ระบุชื่อจริง">
+                            </div>
+                            <div class="form-group">
+                                <label>นามสกุล <span class="required">*</span></label>
+                                <input type="text" id="form-lname" class="form-input" required
+                                    placeholder="ระบุนามสกุล">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>อีเมล <span class="required">*</span></label>
+                                <input type="email" id="form-email" class="form-input" required
+                                    placeholder="name@cice.edu">
+                            </div>
+                            <div class="form-group">
+                                <label>เบอร์โทรศัพท์</label>
+                                <input type="tel" id="form-phone" class="form-input" placeholder="08x-xxx-xxxx">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">ข้อมูลการทำงาน</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>รหัสพนักงาน <span class="required">*</span></label>
+                                <input type="text" id="form-id" class="form-input" required placeholder="เช่น U1001">
+                            </div>
+                            <div class="form-group">
+                                <label>แผนก/ฝ่าย <span class="required">*</span></label>
+                                <select id="form-dept" class="form-input" required>
+                                    <option value="">เลือกแผนก</option>
+                                    <option value="academic">ฝ่ายวิชาการ</option>
+                                    <option value="personnel">ฝ่ายบุคคล</option>
+                                    <option value="admin">ฝ่ายธุรการ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ตำแหน่ง <span class="required">*</span></label>
+                                <input type="text" id="form-position" class="form-input" required
+                                    placeholder="เช่น อาจารย์">
+                            </div>
+                            <div class="form-group">
+                                <label>สิทธิ์การใช้งาน <span class="required">*</span></label>
+                                <select id="form-role" class="form-input" required>
+                                    <option value="appraisee">Appraisee (ผู้รับการประเมิน)</option>
+                                    <option value="assessor">Assessor (ผู้ประเมิน)</option>
+                                    <option value="admin">Admin (ผู้ดูแลระบบ)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">สถานะการใช้งาน</h3>
+                        <div class="form-radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="status" value="active" checked>
+                                ใช้งาน (Active)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="status" value="inactive">
+                                ปิดใช้งาน (Inactive)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="form-cancel-btn">ยกเลิก</button>
+                        <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/personnel-management.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Dark Mode Logic (Basic Implementation)
+        const darkModeBtn = document.getElementById('dark-mode-toggle-btn');
+        darkModeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            darkModeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+    </script>
+</body>
+
+</html>
